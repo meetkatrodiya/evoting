@@ -22,7 +22,7 @@ public class User {
 
   @NotBlank
   @Size(max= 12)
-  private String adharid;
+  private long adharid;
 
   @NotBlank
   @Size(max = 50)
@@ -33,6 +33,12 @@ public class User {
   @Size(max = 120)
   private String password;
 
+  @NotBlank
+  private String name;
+
+  @NotBlank
+  @DBRef
+  private Constituency constituency;
   public String getId() {
     return id;
   }
@@ -49,11 +55,11 @@ public class User {
     this.voterid = voterid;
   }
 
-  public String getAdharid() {
+  public long getAdharid() {
     return adharid;
   }
 
-  public void setAdharid(String adharid) {
+  public void setAdharid(long adharid) {
     this.adharid = adharid;
   }
 
@@ -80,21 +86,31 @@ public class User {
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
   }
+  public String getName() {return name;}
+  public void setName(String name) {this.name = name;}
 
-  public User(String id, String voterid, String adharid, String email, String password, Set<Role> roles) {
+  public Constituency getConstituency() {return constituency;}
+
+  public void setConstituency(Constituency constituency) {this.constituency = constituency;}
+
+  public User(String id, String voterid, long adharid, String email, String password, Set<Role> roles, String name, Constituency constituency) {
     this.id = id;
     this.voterid = voterid;
     this.adharid = adharid;
     this.email = email;
     this.password = password;
     this.roles = roles;
+    this.name = name;
+    this.constituency = constituency;
   }
 
-  public User( String voterid, String adharid, String email, String password) {
+  public User( String voterid, long adharid, String email, String name, Constituency constituency,String password) {
 
     this.voterid = voterid;
     this.adharid = adharid;
     this.email = email;
+    this.name = name;
+    this.constituency = constituency;
     this.password = password;
 
   }
