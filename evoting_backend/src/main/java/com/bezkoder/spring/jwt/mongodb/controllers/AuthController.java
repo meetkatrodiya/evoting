@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.bezkoder.spring.jwt.mongodb.models.Constituency;
+import com.bezkoder.spring.jwt.mongodb.repository.ConstituencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,6 +53,10 @@ public class AuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 
+//	added
+	@Autowired
+	private ConstituencyRepository constituencyRepository;
+
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -80,7 +86,7 @@ public class AuthController {
 					.body(new MessageResponse("Error: voter id is already taken!"));
 		}
 
-		if (userRepository.existsByAdharid(signUpRequest.getVoterid())) {
+		if (userRepository.existsByAdharid(signUpRequest.getAdharid())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: adhar id is already taken!"));
@@ -92,14 +98,18 @@ public class AuthController {
 					.body(new MessageResponse("Error: Email is already in use!"));
 		}
 
+		Constituency con = constituencyRepository.findConstituencyByConstituencyname(signUpRequest.getConstituency());
+		if(con == null){
+			return ResponseEntity.internalServerError().body("Constituency is not found");
+		}
 		// Create new user's account
 		User user = new User(signUpRequest.getVoterid(),signUpRequest.getAdharid(),
-							 signUpRequest.getEmail(),
+							 signUpRequest.getEmail(),signUpRequest.getName(),con,
 							 encoder.encode(signUpRequest.getPassword()));
 
 		Set<String> strRoles = signUpRequest.getRoles();
 		Set<Role> roles = new HashSet<>();
-
+		user.setIsVoted(false);
 		if (strRoles == null) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
