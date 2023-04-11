@@ -3,6 +3,7 @@ package com.bezkoder.spring.jwt.mongodb.services;
 import com.bezkoder.spring.jwt.mongodb.dto.PartyDTO;
 import com.bezkoder.spring.jwt.mongodb.helper.FileUploadHelper;
 import com.bezkoder.spring.jwt.mongodb.models.Party;
+import com.bezkoder.spring.jwt.mongodb.repository.CandidateRepository;
 import com.bezkoder.spring.jwt.mongodb.repository.PartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,10 @@ public class PartyService {
 
     @Autowired
     private FileUploadHelper fileUploadHelper;
+
+    @Autowired
+    private CandidateRepository candidateRepository;
+
     public ResponseEntity<?> addParty(PartyDTO party, MultipartFile file) throws IOException {
         if(file.isEmpty()){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Request must contain file");
@@ -59,5 +64,18 @@ public class PartyService {
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong!!");
 
+    }
+    public List<Party> getAllParty(){
+        return partyRepository.findAll();
+    }
+
+    public ResponseEntity<?> deleteParty(int id){
+        Party p = partyRepository.findById(id).get();
+        if(p == null){
+            return ResponseEntity.status(500).body("Party does not exist");
+        }
+        candidateRepository.deleteCandidatesByParty(p);
+        partyRepository.deleteById(id);
+        return ResponseEntity.ok("Party and respective candidates are removed");
     }
 }

@@ -38,16 +38,20 @@ public class CandidateService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Already registered");
         }
         Party p = partyRepository.findPartyByPartyname(candidate.getParty());
+        System.out.println(p);
         if(p == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Party does not exist");
         }
         Constituency c = constituencyRepository.findConstituencyByConstituencyname(candidate.getConstituency());
+        System.out.println(c);
+        System.out.println(candidateRepository.existsCandidateByConstituency(c));
+        System.out.println(candidateRepository.existsCandidateByParty(p));
         if(c == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Constituency does not exist");
         }
-        if(candidateRepository.existsCandidateByConstituency(c) && candidateRepository.existsCandidateByParty(p)){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Already one of your candidate is registered for this constituency");
-        }
+//        if(candidateRepository.existsCandidateByConstituency(c) && candidateRepository.existsCandidateByParty(p)){
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Already one of your candidate is registered for this constituency");
+//        }
         Candidate cand = new Candidate();
         cand.setAdharid(candidate.getAdharid());
         cand.setName(candidate.getName());
@@ -71,5 +75,31 @@ public class CandidateService {
             return ResponseEntity.status(500).body("No candidate found");
         }
         return new ResponseEntity<>(canlist, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> updateCandidate(CandidateDTO candidate){
+        try{
+            Candidate can = candidateRepository.findById(candidate.getAdharid()).get();
+            can.setName(candidate.getName());
+            can.setCity(candidate.getCity());
+            can.setMobileno(candidate.getMobileno());
+            can.setDob(candidate.getDob());
+            Party p = partyRepository.findPartyByPartyname(candidate.getParty());
+            if(p == null){
+                return ResponseEntity.status(500).body("Party not found");
+            }
+            can.setParty(p);
+            Constituency con = constituencyRepository.findConstituencyByConstituencyname(candidate.getConstituency());
+            if(con == null){
+                return ResponseEntity.status(500).body("Constituency not found");
+            }
+            can.setConstituency(con);
+            candidateRepository.save(can);
+            return ResponseEntity.ok("Candidate updated Successfully");
+        }
+        catch (Exception ex){
+            return ResponseEntity.status(500).body(ex.getMessage());
+        }
+
     }
 }

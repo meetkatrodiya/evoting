@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -39,6 +40,8 @@ public class User {
   @NotBlank
   @DBRef
   private Constituency constituency;
+
+  private boolean isVoted;
   public String getId() {
     return id;
   }
@@ -92,8 +95,9 @@ public class User {
   public Constituency getConstituency() {return constituency;}
 
   public void setConstituency(Constituency constituency) {this.constituency = constituency;}
-
-  public User(String id, String voterid, long adharid, String email, String password, Set<Role> roles, String name, Constituency constituency) {
+  public boolean getIsVoted(){return isVoted;}
+  public void setIsVoted(boolean isVoted){this.isVoted = isVoted;}
+  public User(String id, String voterid, long adharid, String email, String password, Set<Role> roles, String name, Constituency constituency,boolean isVoted) {
     this.id = id;
     this.voterid = voterid;
     this.adharid = adharid;
@@ -102,6 +106,7 @@ public class User {
     this.roles = roles;
     this.name = name;
     this.constituency = constituency;
+    this.isVoted = isVoted;
   }
 
   public User( String voterid, long adharid, String email, String name, Constituency constituency,String password) {

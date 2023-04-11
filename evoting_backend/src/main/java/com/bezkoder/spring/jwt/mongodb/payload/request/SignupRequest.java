@@ -12,8 +12,6 @@ public class SignupRequest {
     @Size(min = 3, max = 20)
     private String voterid;
 
-    @NotBlank
-    @Size(min= 12,max=12)
     private long adharid;
  
     @NotBlank

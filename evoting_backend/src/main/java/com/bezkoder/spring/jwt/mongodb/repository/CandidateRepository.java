@@ -13,4 +13,6 @@ public interface CandidateRepository extends MongoRepository<Candidate,Long> {
     Boolean existsCandidateByConstituency(Constituency c);
 
     List<Candidate> findCandidatesByConstituency(Constituency con);
+
+    void deleteCandidatesByParty(Party p);
 }

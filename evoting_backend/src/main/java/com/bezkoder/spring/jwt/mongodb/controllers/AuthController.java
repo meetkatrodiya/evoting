@@ -86,7 +86,7 @@ public class AuthController {
 					.body(new MessageResponse("Error: voter id is already taken!"));
 		}
 
-		if (userRepository.existsByAdharid(signUpRequest.getVoterid())) {
+		if (userRepository.existsByAdharid(signUpRequest.getAdharid())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: adhar id is already taken!"));
@@ -109,7 +109,7 @@ public class AuthController {
 
 		Set<String> strRoles = signUpRequest.getRoles();
 		Set<Role> roles = new HashSet<>();
-
+		user.setIsVoted(false);
 		if (strRoles == null) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));

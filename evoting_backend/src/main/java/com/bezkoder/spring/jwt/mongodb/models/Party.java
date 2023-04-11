@@ -12,6 +12,15 @@ public class Party {
     private String partylogo;
     private String leadername;
 
+    @Override
+    public String toString() {
+        return "Party{" +
+                "id=" + id +
+                ", partyname='" + partyname + '\'' +
+                ", leadername='" + leadername + '\'' +
+                '}';
+    }
+
     public Party() {
     }
 

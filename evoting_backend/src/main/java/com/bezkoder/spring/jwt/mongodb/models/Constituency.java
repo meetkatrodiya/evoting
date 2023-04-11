@@ -46,4 +46,13 @@ public class Constituency {
     public void setState(State state) {
         this.state = state;
     }
+
+    @Override
+    public String toString() {
+        return "Constituency{" +
+                "id=" + id +
+                ", constituencyname='" + constituencyname + '\'' +
+                ", state=" + state +
+                '}';
+    }
 }

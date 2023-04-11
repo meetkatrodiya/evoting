@@ -31,4 +31,12 @@ public class State {
     public void setStatename(String statename) {
         this.statename = statename;
     }
+
+    @Override
+    public String toString() {
+        return "State{" +
+                "id=" + id +
+                ", statename='" + statename + '\'' +
+                '}';
+    }
 }
