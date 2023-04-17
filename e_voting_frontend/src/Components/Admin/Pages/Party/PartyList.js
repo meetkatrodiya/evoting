@@ -14,22 +14,25 @@ import Box from "@mui/material/Box";
 import AddParty from "./AddParty";
 import UpdateParty from "./UpdateParty";
 import { Dialog } from "@mui/material";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
+import Loading from "../../../Loading/Loading";
 
 function createData(partyName, logo, leaderName) {
   return { partyName, logo, leaderName };
 }
 
-const rows = [
-  createData(
-    "BJP",
-    "https://i0.wp.com/themayanagari.com/wp-content/uploads/2021/03/Bharatiya-Janata-Party-Png.jpg",
-    "Narendra Modi"
-  ),
-  createData(
-    "Congress",
-    "https://imgs.search.brave.com/kqdvmvTfRhzDvuSwrPjrrnZRR-68FQ12I7KwkxwDBF0/rs:fit:860:860:1/g:ce/aHR0cDovL3d3dy5w/bmdpbWFnZXNmcmVl/LmNvbS9MT0dPL0Mv/Y29uZ3Jlc3Mvcm91/bmQtY29uZ3Jlc3Mt/bG9nby1wbmcucG5n",
-    "Mallikarjun Kharge"
-  ),
+// const rows = [
+  // createData(
+  //   "BJP",
+  //   "https://i0.wp.com/themayanagari.com/wp-content/uploads/2021/03/Bharatiya-Janata-Party-Png.jpg",
+  //   "Narendra Modi"
+  // ),
+  // createData(
+  //   "Congress",
+  //   "https://imgs.search.brave.com/kqdvmvTfRhzDvuSwrPjrrnZRR-68FQ12I7KwkxwDBF0/rs:fit:860:860:1/g:ce/aHR0cDovL3d3dy5w/bmdpbWFnZXNmcmVl/LmNvbS9MT0dPL0Mv/Y29uZ3Jlc3Mvcm91/bmQtY29uZ3Jlc3Mt/bG9nby1wbmcucG5n",
+  //   "Mallikarjun Kharge"
+  // ),
   // createData("party", "logo url()", "leader"),
   //   createData("party", "logo url()", "leader"),
   //   createData("party", "logo url()", "leader"),
@@ -46,7 +49,7 @@ const rows = [
   //   createData("party", "logo url()", "leader"),
   //   createData("party", "logo url()", "leader"),
   //   createData("party", "logo url()", "leader"),
-];
+// ];
 
 export default function CandidateList() {
   const [open, setOpen] = React.useState(false);
@@ -65,7 +68,23 @@ export default function CandidateList() {
     updatesetOpen(false);
   };
 
+  const [rows,setRows] = React.useState([]);
+  const [loading,setLoading] = React.useState(false);
+  React.useEffect(()=>{
+    getAllParty();
+  },[rows])
+  async function getAllParty(){
+    try{
+    const res = await axios.get(apis.allparty);
+    setRows(res.data)
+    setLoading(true);
+    }catch(e){
+      alert(e.response.data);
+    }
+  }
   return (
+    <>
+    {loading?
     <Paper
       sx={{
         width: "100%",
@@ -133,15 +152,15 @@ export default function CandidateList() {
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  <TableCell>{row.partyName}</TableCell>
+                  <TableCell>{row.partyname}</TableCell>
                   <TableCell>
                     <img
-                      src={row.logo}
+                      src={`data:image/jpeg;base64,${row.partylogo}`}
                       alt="logo"
                       style={{ height: 35, width: 40 }}
                     />
                   </TableCell>
-                  <TableCell>{row.leaderName}</TableCell>
+                  <TableCell>{row.leadername}</TableCell>
                   <TableCell>
                     <Button
                       onClick={updatehandleClickOpen}
@@ -200,5 +219,8 @@ export default function CandidateList() {
         </Dialog>
       </Box>
     </Paper>
+    :<Loading/>
+}
+    </>
   );
 }

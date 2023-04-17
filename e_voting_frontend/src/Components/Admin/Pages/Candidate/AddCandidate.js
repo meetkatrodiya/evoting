@@ -9,29 +9,104 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 // import axios from "axios";
 // import base_url from "../../../api/bootapi";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
+import Loading from "../../../Loading/Loading";
 
 export default function AddCandidate() {
+  useEffect(()=>{
+    getAllInfo();
+
+  },[]);
   const InputStyle = {
     marginTop: 10,
     marginLeft: 15,
     width: "90%",
   };
-
+  const [loading,setLoading] = useState(false)
   const ButtonStyle = {
     marginTop: 12,
     backgroundColor: "#000080",
     marginLeft: "37%",
     width: "30%",
   };
+  
+  
+  async function getAllInfo  () {
+    try{
+      const pres = await  axios.get(apis.allparty,{headers:{"Content-Type":"application/json"}});
+      console.log(pres.data);
+      setPartyList(pres.data);
 
+      const sres = await axios.get(apis.allstate)
+      setState(sres.data);
+
+      setLoading(true);
+    }catch(err){
+      console.log(err);
+    }
+  }
+  
+  const [partyList,setPartyList] = useState([{}]);
+  const [consti,setConsti] = useState([]);
+  const [state,setState] = useState([]);
+  const [sstate,SetSState] = useState("")
+  async function getAllConstituencyFromState (statename){
+    const res = await axios.get(`${apis.constituenciesbystate}/${statename}`)
+    setConsti(res.data);
+  }
+  let [details,setDetails] = useState(
+    {
+      adharid:"",
+      name:"",
+      city:"",
+      mobileno:"",
+      dob:"",
+      constituency:"",
+      party:"",
+    }
+  )
+    const clear = () =>{
+      setDetails({
+      adharid:"",
+      name:"",
+      city:"",
+      mobileno:"",
+      dob:"",
+      constituency:"",
+      party:"",
+    })
+    SetSState("")
+    }
+  let detailsChanged = (e) =>{
+    setDetails(values => ({...values,[e.target.name]:e.target.value}))
+  }
+  const handleForm = (e) =>{
+    e.preventDefault();
+    console.log(details)
+    axios.post(apis.addcandidate,details).then(
+      (res)=>{
+        console.log(res.data)
+      alert(res.response.data)
+      }
+      )
+      .catch((e)=>{
+        console.log("here: "+e.response.data)
+        alert(e.response.data)
+      })
+      clear();
+      console.log("finish")
+  }
   return (
+    <> 
+    {loading ?
     <div width={400}>
       <DialogTitle id="alert-dialog-title">
         <Avatar style={{ backgroundColor: "#000080", margin: "auto" }}>
@@ -47,8 +122,9 @@ export default function AddCandidate() {
         >
           Add Candidate
         </h2>
+        {console.log(partyList)}
         <Typography style={{ margin: "auto", width: "68%" }}>
-          Please fill your information correctly!
+          Please fill information correctly!
         </Typography>
       </DialogTitle>
       <DialogContent>
@@ -59,9 +135,9 @@ export default function AddCandidate() {
               style={InputStyle}
               fullWidth
               id="adhar"
-              // onChange={(e) => {
-              //   // add_candidate({ ...candidate, adharId: e.target.value });
-              // }}
+              value={details.adharid}
+              onChange={detailsChanged}
+              name="adharid"
               label="Adhar Id"
               placeholder="Enter your adhar card no"
             />
@@ -69,19 +145,19 @@ export default function AddCandidate() {
               style={InputStyle}
               fullWidth
               label="Name"
+              name="name"
               placeholder="Enter your name"
               id="candidate_name"
-              // onChange={(e) => {
-              //   // add_candidate({ ...candidate, name: e.target.value });
-              // }}
+              value={details.name}
+              onChange={detailsChanged}
             />
             <TextField
               style={InputStyle}
               fullWidth
               id="_city"
-              // onChange={(e) => {
-              //   // add_candidate({ ...candidate, city: e.target.value });
-              // }}
+              name="city"
+              value={details.city}
+              onChange={detailsChanged}
               label="City"
               placeholder="Enter your City"
             />
@@ -89,9 +165,9 @@ export default function AddCandidate() {
               style={InputStyle}
               fullWidth
               id="_mobileNo"
-              // onChange={(e) => {
-              //   // add_candidate({ ...candidate, mobileNo: e.target.value });
-              // }}
+              name="mobileno"
+              value={details.mobileno}
+              onChange={detailsChanged}
               label="Mobile No"
               placeholder="Enter your mobile no"
             />
@@ -100,33 +176,62 @@ export default function AddCandidate() {
               fullWidth
               label="Date of Birth"
               id="_dob"
-              // onChange={(e) => {
-              //   // add_candidate({ ...candidate, dob: e.target.value });
-              // }}
+              name="dob"
+              value={details.dob}
+              onChange={detailsChanged}
               InputLabelProps={{ shrink: true }}
               type="date"
             />
+            <FormControl style={InputStyle}>
+              <InputLabel id="demo-multiple-name-label">Party</InputLabel>
 
+              <Select
+                input={<OutlinedInput label="Party" />}
+                value={details.party}
+                // value={partyList.partyname}
+                onChange={
+                  detailsChanged
+                }
+                inputProps={{
+                  name: "party",
+                  id: "id",
+                }}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {/* {loading && console.log("foram"+partyList)} */}
+                
+              {/* <MenuItem value={partyList.partyname}>{partyList.partyname}</MenuItem> */}
+              { partyList.map((item) => {
+                return <MenuItem value={item.partyname}>{item.partyname}</MenuItem>;
+              })}
+              </Select>
+            </FormControl>
             <FormControl style={InputStyle}>
               <InputLabel id="demo-multiple-name-label">State Name</InputLabel>
 
               <Select
                 input={<OutlinedInput label="StateName" />}
-                // value={party.id}
-                // onChange={(e) => {
-                //   // add_candidate({ ...candidate, party: e.target.value });
-                // }}
-                // inputProps={{
-                //   name: "partyName",
-                //   id: "id",
-                // }}
+                // value={details.state}
+                value={sstate}
+                onChange={(e)=>{
+                  detailsChanged(e);
+                  SetSState(e.target.value)
+                  getAllConstituencyFromState(e.target.value);
+                }
+                }
+                inputProps={{
+                  name: "state",
+                  id: "id",
+                }}
               >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                {/* {party.map((item) => {
-                return <MenuItem value={item.id}>{item.partyName}</MenuItem>;
-              })} */}
+                {state.map((item) => {
+                return <MenuItem value={item.statename}>{item.statename}</MenuItem>;
+              })}
               </Select>
             </FormControl>
 
@@ -135,30 +240,33 @@ export default function AddCandidate() {
 
               <Select
                 input={<OutlinedInput label="Consituncy" />}
-                // value={party.id}
-                // onChange={(e) => {
-                //   // add_candidate({ ...candidate, party: e.target.value });
-                // }}
-                // inputProps={{
-                //   name: "partyName",
-                //   id: "id",
-                // }}
+                value={details.constituency}
+                onChange={
+                  detailsChanged
+                  // add_candidate({ ...candidate, party: e.target.value });
+                }
+                inputProps={{
+                  name: "constituency",
+                  id: "id",
+                }}
               >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                {/* {party.map((item) => {
-                return <MenuItem value={item.id}>{item.partyName}</MenuItem>;
-              })} */}
+                {consti.map((item) => {
+                return <MenuItem value={item.constituencyname}>{item.constituencyname}</MenuItem>;
+              })}
               </Select>
             </FormControl>
 
-            <Button style={ButtonStyle} type="submit" variant="contained">
+            <Button style={ButtonStyle} type="button" onClick={handleForm} variant="contained">
               Add
             </Button>
           </form>
         </DialogContentText>
       </DialogContent>
     </div>
+: <Loading/>}
+    </>
   );
 }

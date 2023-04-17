@@ -12,30 +12,19 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Box from "@mui/material/Box";
 import { Dialog } from "@mui/material";
 import AddState from "./AddState";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
+import Loading from "../../../Loading/Loading";
 
-function createData(stateName) {
-  return { stateName };
-}
 
-const rows = [
-  createData("India"),
-  createData("China"),
-  createData("Italy"),
-  createData("United States"),
-  createData("Canada"),
-  createData("Australia"),
-  createData("Germany"),
-  createData("Ireland"),
-  createData("Mexico"),
-  createData("Japan"),
-  createData("Japan"),
-  createData("Japan"),
-  createData("France"),
-  createData("United Kingdom"),
-  createData("Russia"),
-  createData("Nigeria"),
-  createData("Brazil"),
-];
+
+// const rows = [
+//   createData("India"),
+//   createData("China"),
+//   createData("Italy"),
+// ];
 
 export default function CandidateList() {
   const [open, setOpen] = React.useState(false);
@@ -45,8 +34,26 @@ export default function CandidateList() {
   const handleClose = () => {
     setOpen(false);
   };
+  const [rows,setRows] = useState([]);
+const [loading,setLoading] = useState(false);
 
+useEffect(()=>{
+  getStates()
+},[rows])
+async function getStates(){
+  try{
+    const res = await axios.get(apis.allstate);
+    setRows(res.data);
+    setLoading(true);
+  }
+  catch(e){
+    alert(e.response.data)
+  }
+
+}
   return (
+    <>
+    {loading?
     <Paper
       sx={{
         width: "100%",
@@ -88,11 +95,11 @@ export default function CandidateList() {
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  <TableCell>{row.stateName}</TableCell>
+                  <TableCell>{row.statename}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"
-                      startIcon={<DeleteIcon />}
+                      startIcon={<DeleteIcon id={row.id}/>}
                       style={{ backgroundColor: "#ff4d4d" }}
                     >
                       Delete
@@ -129,5 +136,8 @@ export default function CandidateList() {
         </Dialog>
       </Box>
     </Paper>
+    : <Loading/>
+}
+    </>
   );
 }

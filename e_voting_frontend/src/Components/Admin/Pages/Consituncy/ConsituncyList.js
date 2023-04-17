@@ -12,25 +12,21 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Box from '@mui/material/Box';
 import { Dialog } from "@mui/material";
 import AddConsituncy from "./AddConsituncy";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
+import Loading from "../../../Loading/Loading";
 
-function createData(consituncy, stateName) {
-  return { consituncy, stateName };
-}
+// function createData(consituncy, stateName) {
+//   return { consituncy, stateName };
+// }
 
-const rows = [
-  createData("Rajkot", "Gujarat"),
-  createData("Una", "Himachal Pradesh"),
-  createData("Prakasam", "Andhra Predesh"),
-  createData("Jalandhar", "Punjab"),
-  createData("Baksa", "Asam"),
-  createData("New Delhi", "Delhi"),
-  createData("Rajkot", "Gujarat"),
-  createData("Una", "Himachal Pradesh"),
-  createData("Prakasam", "Andhra Predesh"),
-  createData("Jalandhar", "Punjab"),
-  createData("Baksa", "Asam"),
-  createData("New Delhi", "Delhi"),
-];
+// const rows = [
+//   createData("Rajkot", "Gujarat"),
+//   createData("Una", "Himachal Pradesh"),
+
+// ];
 
 export default function CandidateList() {
 
@@ -42,7 +38,24 @@ export default function CandidateList() {
     setOpen(false);
   };
 
+  const [loading,setLoading] = useState(false)
+  const [rows,setRows] = useState([])
+  useEffect(()=>{
+    getAllConstituency();
+  },[rows])
+  async function getAllConstituency(){
+    try{
+      const res = await axios.get(apis.allconstituency)
+      setRows(res.data);
+      setLoading(true);
+    }
+    catch(e){
+      alert(e.response.data);
+    }
+  }
   return (
+    <>
+    {loading?
     <Paper
       sx={{
         width: "100%",
@@ -94,8 +107,8 @@ export default function CandidateList() {
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  <TableCell>{row.consituncy}</TableCell>
-                  <TableCell>{row.stateName}</TableCell>
+                  <TableCell>{row.constituencyname}</TableCell>
+                  <TableCell>{row.state.statename}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"
@@ -131,5 +144,8 @@ export default function CandidateList() {
           </Dialog>
       </Box>
     </Paper>
+    : <Loading/>
+}
+    </>
   );
 }

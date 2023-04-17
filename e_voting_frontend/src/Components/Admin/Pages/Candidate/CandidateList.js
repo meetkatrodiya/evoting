@@ -14,56 +14,71 @@ import Box from "@mui/material/Box";
 import { Dialog } from "@mui/material";
 import AddCandidate from "./AddCandidate";
 import UpdateCandidate from "./UpdateCandidate";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
+import Loading from "../../../Loading/Loading";
 
-function createData(name, mobileNo, dob, consituncy, state) {
-  return { name, mobileNo, dob, consituncy, state };
-}
+// function createData(name, mobileNo, dob, consituncy, state) {
+//   return { name, mobileNo, dob, consituncy, state };
+// }
 
-const rows = [
-  createData(
-    "Bhanuben Babaria",
-    "9428561058",
-    "12/5/1976",
-    "Rajkot Rural (SC)",
-    "Gujarat"
-  ),
-  createData(
-    "Arvindbhai Rana",
-    "9852046920",
-    "26/12/1980",
-    "Surat East",
-    "Gujarat"
-  ),
-  createData("Italy", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData(
-    "United States",
-    "1234567890",
-    "26/12/2002",
-    "Consituncy",
-    "State"
-  ),
-  createData("Canada", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Australia", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Germany", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Ireland", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Mexico", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Japan", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Japan", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Japan", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("France", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData(
-    "United Kingdom",
-    "1234567890",
-    "26/12/2002",
-    "Consituncy",
-    "State"
-  ),
-  createData("Russia", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Nigeria", "1234567890", "26/12/2002", "Consituncy", "State"),
-  createData("Brazil", "1234567890", "26/12/2002", "Consituncy", "State"),
-];
+// const rows = [
+//   createData(
+//     "Bhanuben Babaria",
+//     "9428561058",
+//     "12/5/1976",
+//     "Rajkot Rural (SC)",
+//     "Gujarat"
+//   ),
+//   createData(
+//     "Arvindbhai Rana",
+//     "9852046920",
+//     "26/12/1980",
+//     "Surat East",
+//     "Gujarat"
+//   ),
+//   createData("Italy", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData(
+//     "United States",
+//     "1234567890",
+//     "26/12/2002",
+//     "Consituncy",
+//     "State"
+//   ),
+//   createData("Canada", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Australia", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Germany", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Ireland", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Mexico", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Japan", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Japan", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Japan", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("France", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData(
+//     "United Kingdom",
+//     "1234567890",
+//     "26/12/2002",
+//     "Consituncy",
+//     "State"
+//   ),
+//   createData("Russia", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Nigeria", "1234567890", "26/12/2002", "Consituncy", "State"),
+//   createData("Brazil", "1234567890", "26/12/2002", "Consituncy", "State"),
+// ];
 
 export default function CandidateList() {
+  const [id,setId] = React.useState();
+  const [loading,setLoading] = React.useState(false);
+const [rows,setRows] = React.useState([]);
+React.useEffect(()=>{
+  getAllCandidate();
+},[rows],[id])
+async function getAllCandidate(){
+  const res = await axios.get(apis.allcandidate)
+  console.log(res.data)
+  setRows(res.data);
+  setLoading(true);
+}
   const [addopen, addsetOpen] = React.useState(false);
   const addhandleClickOpen = () => {
     addsetOpen(true);
@@ -71,17 +86,25 @@ export default function CandidateList() {
   const addhandleClose = () => {
     addsetOpen(false);
   };
-
+  function dateFormate(dt){
+    const d = new Date(dt)
+    const month = d.getMonth();
+    const year = d.getFullYear();
+    const day = d.getDate();
+    return `${year}-${month}-${day}`
+  }
   const [updateopen, updatesetOpen] = React.useState(false);
-  const updatehandleClickOpen = () => {
+  const updatehandleClickOpen = (e,id) => {
+    setId(id);
     updatesetOpen(true);
   };
   const updatehandleClose = () => {
     updatesetOpen(false);
   };
-
+  
   return (
-    <Paper
+    <>
+   {loading ? <Paper
       sx={{
         width: "100%",
         overflow: "hidden",
@@ -149,6 +172,15 @@ export default function CandidateList() {
                   fontSize: 20,
                 }}
               >
+                Party
+              </TableCell>
+              <TableCell
+                style={{
+                  backgroundColor: "#000099",
+                  color: "#fff",
+                  fontSize: 20,
+                }}
+              >
                 Update
               </TableCell>
               <TableCell
@@ -167,17 +199,19 @@ export default function CandidateList() {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.mobileNo}</TableCell>
-                  <TableCell>{row.dob}</TableCell>
-                  <TableCell>{row.consituncy}</TableCell>
-                  <TableCell>{row.state}</TableCell>
+                  <TableCell>{row.mobileno}</TableCell>
+                  <TableCell>{dateFormate(row.dob)}</TableCell>
+                  <TableCell>{row.constituency.constituencyname}</TableCell>
+                  <TableCell>{row.constituency.state.statename}</TableCell>
+                  <TableCell>{row.party.partyname}</TableCell>
                   <TableCell>
                     <Button
-                      onClick={updatehandleClickOpen}
+                      onClick={(e)=>updatehandleClickOpen(e,row.adharid)}
                       variant="contained"
                       startIcon={<UpdateIcon />}
                       color="success"
                     >
+                      {/* {console.log(row.adharid)} */}
                       Update
                     </Button>
                   </TableCell>
@@ -202,7 +236,7 @@ export default function CandidateList() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <UpdateCandidate />
+        <UpdateCandidate id={id}/>
       </Dialog>
       <Box
         textAlign="center"
@@ -229,5 +263,7 @@ export default function CandidateList() {
         </Dialog>
       </Box>
     </Paper>
+:<Loading/>}
+    </>
   );
 }

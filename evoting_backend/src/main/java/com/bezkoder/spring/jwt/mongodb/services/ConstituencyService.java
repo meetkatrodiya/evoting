@@ -6,6 +6,7 @@ import com.bezkoder.spring.jwt.mongodb.models.State;
 import com.bezkoder.spring.jwt.mongodb.repository.ConstituencyRepository;
 import com.bezkoder.spring.jwt.mongodb.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +47,16 @@ public class ConstituencyService {
             return ResponseEntity.internalServerError().body("Something went wrong");
         }
 
+    }
+    public ResponseEntity<?> getConstituencyFromState(String statename){
+        if(statename == null){
+            return ResponseEntity.status(500).body("No state found");
+        }
+        State s = stateRepository.findByStatename(statename);
+        if(s == null){
+            return ResponseEntity.status(500).body("No state found");
+        }
+        List<Constituency> clist = constituencyRepository.findConstituenciesByState(s);
+        return new ResponseEntity<>(clist, HttpStatus.OK);
     }
 }

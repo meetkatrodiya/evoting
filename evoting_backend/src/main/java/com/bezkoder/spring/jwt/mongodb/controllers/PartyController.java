@@ -5,6 +5,7 @@ import com.bezkoder.spring.jwt.mongodb.models.Party;
 import com.bezkoder.spring.jwt.mongodb.repository.PartyRepository;
 import com.bezkoder.spring.jwt.mongodb.services.PartyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,5 +29,12 @@ public class PartyController {
     @DeleteMapping("party/deleteParty/{id}")
     public ResponseEntity<?> deleteParty(@PathVariable("id") int id){
         return partyService.deleteParty(id);
+    }
+
+    @GetMapping("party/getAllParty")
+    public List<Party> getAllParty(){
+        return partyService.getAllParty();
+//        return new ResponseEntity<>(parties, HttpStatus.OK);
+//        return ResponseEntity.ok(parties);
     }
 }

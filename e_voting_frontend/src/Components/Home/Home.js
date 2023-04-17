@@ -41,7 +41,7 @@ function Home() {
     textAlign: "center",
     fontSize: 30,
     color: "#e6e6ff",
-    webkitTextStrokeColor: "black",
+    WebkitTextStrokeColor: "black",
   };
 
   const ButtonStyle = {

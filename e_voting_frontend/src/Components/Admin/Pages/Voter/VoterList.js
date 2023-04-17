@@ -14,30 +14,18 @@ import Box from "@mui/material/Box";
 import { Dialog } from "@mui/material";
 import AddVoter from "./AddVoter";
 import UpdateVoter from "./UpdateVoter";
+import { useState } from "react";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
 
-function createData(name, adharId, voterId) {
-  return { name, adharId, voterId };
-}
+// function createData(name, adharId, voterId) {
+//   return { name, adharId, voterId };
+// }
 
-const rows = [
-  createData("Rajeshbhai Patel", "1523 4523 6810", "PRO0086177"),
-  createData("Meet Patel", "1111 5252 0330", "GNO0271102"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-  // createData("name", "123456789123", "1020304050"),
-];
+// const rows = [
+//   createData("Rajeshbhai Patel", "1523 4523 6810", "PRO0086177"),
+//   createData("Meet Patel", "1111 5252 0330", "GNO0271102"),
+// ];
 
 export default function VoterList() {
   const [open, setOpen] = React.useState(false);
@@ -57,11 +45,21 @@ export default function VoterList() {
   };
 
   const [input, setInput] = React.useState({
-    name: "mansi",
+    name: "",
     adharId: "",
     voterId: "",
   });
 
+  const [rows,setRows] = useState([])
+  const [loading,setLoading] = useState(false)
+  async function getVoters(){
+    try{
+      const res = await axios.get(apis.allvoters)
+    }
+    catch(e){
+      alert(e.response.data)
+    }
+  }
   return (
     <Paper
       sx={{

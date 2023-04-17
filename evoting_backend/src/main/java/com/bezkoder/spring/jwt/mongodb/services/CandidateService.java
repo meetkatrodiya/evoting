@@ -102,4 +102,12 @@ public class CandidateService {
         }
 
     }
+    public ResponseEntity<?> getCandidateFromId(long id){
+        try{
+            Candidate can = candidateRepository.findById(id).get();
+            return new ResponseEntity<>(can,HttpStatus.OK);
+        }catch (Exception ex){
+            return ResponseEntity.status(500).body("No candidate found");
+        }
+    }
 }
