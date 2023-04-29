@@ -47,4 +47,9 @@ public class CandidateController {
     public ResponseEntity<?> getCandidate(@PathVariable("id") long id){
         return candidateService.getCandidateFromId(id);
     }
+
+    @DeleteMapping("candidate/deleteCandidate/{id}")
+    public ResponseEntity<?> deleteCandidate(@PathVariable("id") long id){
+        return candidateService.deleteCandidate(id);
+    }
 }
