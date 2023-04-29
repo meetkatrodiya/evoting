@@ -2,10 +2,18 @@ import { Avatar, Button, TextField, Typography } from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import React from "react";
+import React, { useState } from "react";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
 
 export default function AddState() {
+
+  const [state,setState] = useState("");
+  const handleClick = (e)=>{
+    e.preventDefault()
+    axios.get(`${apis.addstate}/${state}`).then((res)=>alert(res.data)).catch((e)=>console.log(e))
+  }
   return (
     <>
       <div width={200}>
@@ -35,6 +43,7 @@ export default function AddState() {
                 fullWidth
                 id="adhar"
                 label="State Name"
+                onChange={(e)=>setState(e.target.value)}
                 placeholder="Enter state name"
               />
 
@@ -45,6 +54,7 @@ export default function AddState() {
                   marginLeft: "37%",
                   backgroundColor: "#000080",
                 }}
+                onClick={handleClick}
                 type="submit"
                 variant="contained"
               >

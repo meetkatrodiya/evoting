@@ -17,6 +17,7 @@ import UpdateVoter from "./UpdateVoter";
 import { useState } from "react";
 import axios from "axios";
 import { apis } from "../../../../api/bootapi";
+import Loading from "../../../Loading/Loading";
 
 // function createData(name, adharId, voterId) {
 //   return { name, adharId, voterId };
@@ -28,6 +29,9 @@ import { apis } from "../../../../api/bootapi";
 // ];
 
 export default function VoterList() {
+  React.useEffect(()=>{
+    getVoters()
+  },[])
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -36,6 +40,9 @@ export default function VoterList() {
     setOpen(false);
   };
 
+  React.useEffect(()=>{
+    getVoters()
+  },[rows])
   const [updateopen, updatesetOpen] = React.useState(false);
   const updatehandleClickOpen = () => {
     updatesetOpen(true);
@@ -49,18 +56,37 @@ export default function VoterList() {
     adharId: "",
     voterId: "",
   });
-
   const [rows,setRows] = useState([])
   const [loading,setLoading] = useState(false)
-  async function getVoters(){
+   async function getVoters(){
     try{
       const res = await axios.get(apis.allvoters)
+      setRows(res.data);
+      setLoading(true);
     }
     catch(e){
       alert(e.response.data)
     }
   }
+  const handleDelete = (e,id)=>{
+    e.preventDefault();
+    // var onclick = confirm("Are you sure you want to delete this party?")
+    // console.log(onclick)
+    console.log(id);
+    if(window.confirm("Are you sure you want to remove this Voter?") == true){
+      axios.delete(`${apis.deletevoter}/${id}`).then((res)=>{
+        alert(res.data)
+        getVoters()
+      }).catch((err)=>console.log(err))
+    }
+    else{
+      console.log("cancel");
+    }
+
+  }
   return (
+    <>
+    {loading?
     <Paper
       sx={{
         width: "100%",
@@ -79,45 +105,54 @@ export default function VoterList() {
             <TableRow>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Voter Name
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 AdharCard Number
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Voter ID
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
+                }}
+              >
+                Email
+              </TableCell>
+              <TableCell
+                style={{
+                  backgroundColor: "#00003B",
+                  color: "#fff",
+                  fontSize: 16,
                 }}
               >
                 Update
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Delete
@@ -129,8 +164,9 @@ export default function VoterList() {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.adharId}</TableCell>
-                  <TableCell>{row.voterId}</TableCell>
+                  <TableCell>{row.adharid}</TableCell>
+                  <TableCell>{row.voterid}</TableCell>
+                  <TableCell>{row.email}</TableCell>
                   <TableCell>
                     <Button
                       onClick={updatehandleClickOpen}
@@ -146,6 +182,7 @@ export default function VoterList() {
                       variant="contained"
                       startIcon={<DeleteIcon />}
                       style={{ backgroundColor: "#ff4d4d" }}
+                      onClick={(e)=>handleDelete(e,row.id)}
                     >
                       Delete
                     </Button>
@@ -175,7 +212,7 @@ export default function VoterList() {
           onClick={handleClickOpen}
           variant="contained"
           startIcon={<AddCircleIcon />}
-          style={{ backgroundColor: "#000099" }}
+          style={{ backgroundColor: "#00003B" }}
         >
           Add Voter
         </Button>
@@ -189,5 +226,8 @@ export default function VoterList() {
         </Dialog>
       </Box>
     </Paper>
+    :<Loading/>
+          }
+          </>
   );
 }

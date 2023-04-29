@@ -74,9 +74,9 @@ export default function CandidateList() {
             <TableRow>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                   width: 300
                 }}
               >
@@ -84,18 +84,18 @@ export default function CandidateList() {
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 State Name
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                   width: 10
                 }}
               >
@@ -107,9 +107,9 @@ export default function CandidateList() {
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  <TableCell>{row.constituencyname}</TableCell>
-                  <TableCell>{row.state.statename}</TableCell>
-                  <TableCell align="right">
+                  <TableCell sx={{fontSize:15}}>{row.constituencyname}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.state.statename}</TableCell>
+                  <TableCell  align="right">
                     <Button
                       variant="contained"
                       startIcon={<DeleteIcon />}
@@ -129,7 +129,7 @@ export default function CandidateList() {
           onClick={handleClickOpen}
           variant="contained"
           startIcon={<AddCircleIcon />}
-          style={{ backgroundColor: "#000099" }}
+          style={{ backgroundColor: "#00003B" }}
         >
           Add Consituncy
         </Button>

@@ -110,4 +110,14 @@ public class CandidateService {
             return ResponseEntity.status(500).body("No candidate found");
         }
     }
+
+    public ResponseEntity<?> deleteCandidate(long id){
+        try{
+            Candidate candidate = candidateRepository.findById(id).get();
+            candidateRepository.deleteById(id);
+            return ResponseEntity.ok("Candidate Deleted Successfully");
+        }catch (Exception ex){
+            return ResponseEntity.status(500).body("No candidate found");
+        }
+    }
 }

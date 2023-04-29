@@ -52,6 +52,9 @@ function createData(partyName, logo, leaderName) {
 // ];
 
 export default function CandidateList() {
+
+  const [check,setCheck] = React.useState(false);
+
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -72,15 +75,38 @@ export default function CandidateList() {
   const [loading,setLoading] = React.useState(false);
   React.useEffect(()=>{
     getAllParty();
-  },[rows])
+  },[check]);
   async function getAllParty(){
     try{
     const res = await axios.get(apis.allparty);
+    console.log(res.data);
     setRows(res.data)
     setLoading(true);
     }catch(e){
-      alert(e.response.data);
+      console.log(e)
+      // alert(e.response.data);
     }
+  }
+  const handleDelete = (e,id)=>{
+    e.preventDefault();
+    // var onclick = confirm("Are you sure you want to delete this party?")
+    // console.log(onclick)
+    if(window.confirm("Are you sure you want to delete this party?") == true){
+      axios.delete(`${apis.deleteparty}/${id}`).then((res)=>{
+        alert(res.data)
+        handlecheck();
+      }).catch((err)=>console.log(err))
+    }
+    else{
+      console.log("cancel");
+    }
+
+  }
+  const handlecheck = ()=>{
+    if(check)
+      setCheck(false)
+    else
+      setCheck(true)
   }
   return (
     <>
@@ -103,45 +129,45 @@ export default function CandidateList() {
             <TableRow>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Party Name
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Party Logo
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Leader Name
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Update
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Delete
@@ -152,7 +178,7 @@ export default function CandidateList() {
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  <TableCell>{row.partyname}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.partyname}</TableCell>
                   <TableCell>
                     <img
                       src={`data:image/jpeg;base64,${row.partylogo}`}
@@ -160,7 +186,7 @@ export default function CandidateList() {
                       style={{ height: 35, width: 40 }}
                     />
                   </TableCell>
-                  <TableCell>{row.leadername}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.leadername}</TableCell>
                   <TableCell>
                     <Button
                       onClick={updatehandleClickOpen}
@@ -176,6 +202,9 @@ export default function CandidateList() {
                       variant="contained"
                       startIcon={<DeleteIcon />}
                       style={{ backgroundColor: "#ff4d4d" }}
+                      onClick={(e)=>{
+                        handleDelete(e,row.id)
+                      }}
                     >
                       Delete
                     </Button>
@@ -205,7 +234,7 @@ export default function CandidateList() {
           onClick={handleClickOpen}
           variant="contained"
           startIcon={<AddCircleIcon />}
-          style={{ backgroundColor: "#000099" }}
+          style={{ backgroundColor: "#00003B" }}
         >
           Add Party
         </Button>
@@ -215,7 +244,7 @@ export default function CandidateList() {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <AddParty />
+          <AddParty close={handleClose} check={handlecheck}/>
         </Dialog>
       </Box>
     </Paper>

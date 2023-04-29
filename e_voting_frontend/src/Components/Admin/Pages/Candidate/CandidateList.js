@@ -67,12 +67,14 @@ import Loading from "../../../Loading/Loading";
 // ];
 
 export default function CandidateList() {
+
+  const [check, setCheck] = React.useState(false)
   const [id,setId] = React.useState();
   const [loading,setLoading] = React.useState(false);
 const [rows,setRows] = React.useState([]);
 React.useEffect(()=>{
   getAllCandidate();
-},[rows],[id])
+},[check],[id])
 async function getAllCandidate(){
   const res = await axios.get(apis.allcandidate)
   console.log(res.data)
@@ -101,7 +103,30 @@ async function getAllCandidate(){
   const updatehandleClose = () => {
     updatesetOpen(false);
   };
-  
+  const handleDelete = (e,id)=>{
+    e.preventDefault();
+    // var onclick = confirm("Are you sure you want to delete this party?")
+    // console.log(onclick)
+    if(window.confirm("Are you sure you want to delete this candidate?") == true){
+      axios.delete(`${apis.deleteCandidate}/${id}`).then((res)=>{
+        alert(res.data)
+        if(check)
+          setCheck(false)
+        else
+          setCheck(true)
+      }).catch((err)=>console.log(err))
+    }
+    else{
+      console.log("cancel");
+    }
+
+  }
+  const handlecheck = ()=>{
+    if(check)
+      setCheck(false)
+    else
+      setCheck(true)
+  }
   return (
     <>
    {loading ? <Paper
@@ -118,76 +143,76 @@ async function getAllCandidate(){
       </Typography>
       <TableContainer sx={{ maxHeight: 450, backgroundColor: "#e6e6ff" }}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead>
+          <TableHead >
             <TableRow>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Candidate Name
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Mobile No.
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Date of Birth
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Constituncy
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 State
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Party
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Update
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 Delete
@@ -198,12 +223,12 @@ async function getAllCandidate(){
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.mobileno}</TableCell>
-                  <TableCell>{dateFormate(row.dob)}</TableCell>
-                  <TableCell>{row.constituency.constituencyname}</TableCell>
-                  <TableCell>{row.constituency.state.statename}</TableCell>
-                  <TableCell>{row.party.partyname}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.name}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.mobileno}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{dateFormate(row.dob)}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.constituency.constituencyname}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.constituency.state.statename}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.party.partyname}</TableCell>
                   <TableCell>
                     <Button
                       onClick={(e)=>updatehandleClickOpen(e,row.adharid)}
@@ -220,6 +245,9 @@ async function getAllCandidate(){
                       variant="contained"
                       startIcon={<DeleteIcon />}
                       style={{ backgroundColor: "#ff4d4d" }}
+                      onClick={(e)=>{
+                        handleDelete(e,row.adharid)
+                      }}
                     >
                       Delete
                     </Button>
@@ -236,7 +264,7 @@ async function getAllCandidate(){
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <UpdateCandidate id={id}/>
+        <UpdateCandidate id={id} close={updatehandleClose} check={handlecheck}/>
       </Dialog>
       <Box
         textAlign="center"
@@ -249,7 +277,7 @@ async function getAllCandidate(){
           onClick={addhandleClickOpen}
           variant="contained"
           startIcon={<AddCircleIcon />}
-          style={{ backgroundColor: "#000099" }}
+          style={{ backgroundColor: "#00003B" }}
         >
           Add Candidate
         </Button>
@@ -259,7 +287,7 @@ async function getAllCandidate(){
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <AddCandidate />
+          <AddCandidate close={addhandleClose} />
         </Dialog>
       </Box>
     </Paper>

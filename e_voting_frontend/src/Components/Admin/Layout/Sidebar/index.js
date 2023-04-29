@@ -11,7 +11,12 @@ const Index = () => {
 
     const SidebarStyle = {
         backgroundColor: "#00003B",
-        color: "white"
+        color: "white",
+        height:"100vh",
+        position:"fixed",
+        width:240,
+        
+        
       };
     
   return (
@@ -30,9 +35,9 @@ const Index = () => {
         {drawer}
       </Drawer> */}
       <div style={SidebarStyle}>
-          <List>
-            <img src={logo} alt="Logo" style={{ marginBottom: "22%", width: "100%", }} /> 
-          </List>
+          {/* <List> */}
+            <img src={logo} alt="Logo" width={200} style={{ marginBottom: "22%" }} /> 
+          {/* </List> */}
     
           <List>
           <ListItem disablePadding>

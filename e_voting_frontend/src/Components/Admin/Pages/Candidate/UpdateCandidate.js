@@ -19,6 +19,10 @@ import { apis } from "../../../../api/bootapi";
 import Loading from "../../../Loading/Loading";
 
 export default function UpdateCandidate(props) {
+
+
+  const [check,setCheck] = useState(false);
+
   const InputStyle = {
     marginTop: 10,
     marginLeft: 15,
@@ -40,18 +44,32 @@ export default function UpdateCandidate(props) {
   //   consituncy:  "Rajkot Rural (SC)",
   //   state:  "Gujarat"
   // });
-  const [details,setDetails] = React.useState([])
+  const [details,setDetails] = React.useState( {
+    
+  })
   const [candidate,setCandidate] = useState([]);
   useEffect(()=>{
     console.log("here"+props.id);
     getAllInfo();
     getCandidate();
     
-  })
+    // getAllConstituencyFromState(candidate.constituency.constituencyname)
+  },[check])
   const [loading,setLoading] = useState(false);
   async function getCandidate () {
     const res = await axios.get(`${apis.getcandidate}/${props.id}`);
     setCandidate(res.data);
+    setDetails({adharid:res.data.adharid,
+    name:res.data.name,
+    city:res.data.city,
+    mobileno:res.data.mobileno,
+    dob:res.data.dob,
+    constituency:res.data.constituency.constituencyname,
+    party:res.data.party.partyname,
+  })
+    // console.log("foram"+res.data)
+    console.log("can: "+res.data.constituency.state.statename)
+    getAllConstituencyFromState(res.data.constituency.state.statename)
     // setConsti(res.data.constituency.constituencyname)
     setLoading(true)
   }
@@ -88,9 +106,23 @@ export default function UpdateCandidate(props) {
   async function getAllConstituencyFromState (statename){
     const res = await axios.get(`${apis.constituenciesbystate}/${statename}`)
     setConsti(res.data);
+    console.log("here:")
+    console.log(res.data)
   }
   let detailsChanged = (e) =>{
     setDetails(values => ({...values,[e.target.name]:e.target.value}))
+  }
+  const handleUpdate = (e)=>{
+    e.preventDefault();
+    console.log(details)
+    axios.put(apis.updatecandidate,details).then((res)=>{
+      alert(res.data)
+      props.check();
+      console.log(res.data)
+      props.close()
+    }).catch((err)=>{
+      console.log(err)
+    })
   }
   return (
     <>
@@ -125,6 +157,8 @@ export default function UpdateCandidate(props) {
               label="Adhar Id"
               disabled
               defaultValue={candidate.adharid}
+              name="adharid"
+              onChange={detailsChanged}
               // value={input.adharid}
               placeholder="Enter your adhar card no"
             />
@@ -134,7 +168,8 @@ export default function UpdateCandidate(props) {
               label="Name"
               // value={input.name}
               defaultValue={candidate.name}
-              
+              onChange={detailsChanged}
+              name="name"
               placeholder="Enter your name"
               id="candidate_name"
             />
@@ -145,7 +180,9 @@ export default function UpdateCandidate(props) {
               label="City"
               // value="Rajkot"
               defaultValue={candidate.city}
+              onChange={detailsChanged}
               placeholder="Enter your City"
+              name="city"
             />
             <TextField
               style={InputStyle}
@@ -153,6 +190,8 @@ export default function UpdateCandidate(props) {
               id="_mobileNo"
               label="Mobile No"
               // value={input.mobileNo}
+              name="mobileno"
+              onChange={detailsChanged}
               defaultValue={candidate.mobileno}
               placeholder="Enter your mobile no"
             />
@@ -163,6 +202,8 @@ export default function UpdateCandidate(props) {
               // value={input.dob}
               defaultValue={dateFormate(candidate.dob)}
               id="_dob"
+              onChange={detailsChanged}
+              name="dob"
               InputLabelProps={{ shrink: true }}
               type="date"
             />
@@ -172,16 +213,16 @@ export default function UpdateCandidate(props) {
               <Select
                 input={<OutlinedInput label="StateName" />}
                 // value={details.state}
-                value={candidate.constituency.state.statenamete}
+                defaultValue={candidate.constituency.state.statename}
                 // defaultValue={}
                 onChange={(e)=>{
-                  detailsChanged(e);
+                  // detailsChanged(e);
                   SetSState(e.target.value)
                   getAllConstituencyFromState(e.target.value);
                 }
                 }
                 inputProps={{
-                  name: "state",
+                  // name: "state",
                   id: "id",
                 }}
               >
@@ -240,7 +281,7 @@ export default function UpdateCandidate(props) {
               </Select>
             </FormControl>
 
-            <Button style={ButtonStyle} type="submit" variant="contained">
+            <Button style={ButtonStyle} type="submit" variant="contained" onClick={handleUpdate}>
               Update
             </Button>
           </form>

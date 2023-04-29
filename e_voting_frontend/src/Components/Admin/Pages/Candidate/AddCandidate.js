@@ -19,12 +19,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import { apis } from "../../../../api/bootapi";
 import Loading from "../../../Loading/Loading";
+import { useNavigate } from "react-router-dom";
 
-export default function AddCandidate() {
+export default function AddCandidate({close}) {
   useEffect(()=>{
     getAllInfo();
 
   },[]);
+  const navigate = useNavigate();
   const InputStyle = {
     marginTop: 10,
     marginLeft: 15,
@@ -94,12 +96,15 @@ export default function AddCandidate() {
     axios.post(apis.addcandidate,details).then(
       (res)=>{
         console.log(res.data)
-      alert(res.response.data)
+      alert(res.data)
+      close();
+      // navigate("/candidate")
       }
       )
       .catch((e)=>{
-        console.log("here: "+e.response.data)
-        alert(e.response.data)
+        console.log("here: "+e)
+        // alert(e.response.data)
+        console.log(e)
       })
       clear();
       console.log("finish")

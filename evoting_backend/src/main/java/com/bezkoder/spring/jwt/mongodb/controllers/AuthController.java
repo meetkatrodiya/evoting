@@ -10,17 +10,14 @@ import javax.validation.Valid;
 import com.bezkoder.spring.jwt.mongodb.models.Constituency;
 import com.bezkoder.spring.jwt.mongodb.repository.ConstituencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.bezkoder.spring.jwt.mongodb.models.ERole;
 import com.bezkoder.spring.jwt.mongodb.models.Role;
@@ -142,5 +139,21 @@ public class AuthController {
 		userRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
+
+	@GetMapping("/getAllVoter")
+	public ResponseEntity<?> getAllVoter(){
+		List<User> users = userRepository.findUsersByRoles(roleRepository.findByName(ERole.ROLE_USER));
+		System.out.println(users.size());
+		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/deleteUser/{id}")
+	public ResponseEntity<?> deleteUser(@PathVariable("id") String id){
+		if(id == null){
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No Voter Found");
+		}
+		userRepository.deleteById(id);
+		return ResponseEntity.ok("Voter Deleted Successfully");
 	}
 }

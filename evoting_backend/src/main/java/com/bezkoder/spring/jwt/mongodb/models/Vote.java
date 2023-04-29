@@ -46,4 +46,5 @@ public class Vote {
     public void setVotecount(long votecount) {
         this.votecount = votecount;
     }
+
 }

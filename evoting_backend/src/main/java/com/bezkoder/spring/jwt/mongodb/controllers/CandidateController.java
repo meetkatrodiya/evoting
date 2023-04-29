@@ -33,7 +33,8 @@ public class CandidateController {
         return candidateService.getCandidate(constituency);
     }
 
-    @PutMapping("candidate/updateCandidate")
+    @PutMapping("" +
+            "")
     public ResponseEntity<?> updateCandidate(@RequestBody CandidateDTO candidate){
         return candidateService.updateCandidate(candidate);
     }
@@ -46,5 +47,10 @@ public class CandidateController {
     @GetMapping("candidate/getCandidateFromId/{id}")
     public ResponseEntity<?> getCandidate(@PathVariable("id") long id){
         return candidateService.getCandidateFromId(id);
+    }
+
+    @DeleteMapping("candidate/deleteCandidate/{id}")
+    public ResponseEntity<?> deleteCandidate(@PathVariable("id") long id){
+        return candidateService.deleteCandidate(id);
     }
 }

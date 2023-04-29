@@ -15,7 +15,7 @@ export default function ShowCard(props) {
     <Box sx={{ minWidth: 275 }}>
       <Card variant="outlined">
         <CardContent>
-          <Typography variant="h5" sx={{ padding: 3, color: "#000099"}}>
+          <Typography variant="h5" sx={{ padding: 3, color: "#00003B"}}>
             {props.title}
           </Typography>
           <Accordion sx={{ marginBottom: 3 }}>

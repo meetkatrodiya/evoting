@@ -70,7 +70,10 @@ const Index = () => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          // zIndex:-1
+          boxShadow:"none"
         }}
+
       >
         <Toolbar>
           <IconButton

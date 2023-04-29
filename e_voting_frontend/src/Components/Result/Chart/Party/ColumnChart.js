@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Loading from "../../../Loading/Loading";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
 
 export const data = [
   ["Element", "Density", { role: "style" }],
@@ -12,11 +15,38 @@ export const data = [
 ];
 
 export default function App() {
+  const [dat,setData] = useState({});
+  useEffect(()=>{
+    getPartyCount();
+
+  },[dat]);
+  const [loading,setLoading] = useState(false);
+  var d2 = 
+      [
+        ["Party", "Vote"],
+      ];
+      const [party,setParty] = useState([]);
+  async function getPartyCount (){
+    const res = await axios.get(apis.partycount)
+    // .then((res)=>{
+      setData(res.data.voteCount);
+      setParty(res.data.partyList)
+      setLoading(true);
+  }
+
   return (
+    <>
+    {loading?
     <Card sx={{ minWidth: 275, margin: 3, width: "33%" }}>
+      {
+        party.map((item)=>{d2.push([item,dat[item]])})
+      }
       <CardContent>
-    <Chart chartType="ColumnChart" width="100%" height="400px" data={data} />
+    <Chart chartType="ColumnChart" width="100%" height="400px" data={d2} />
     </CardContent>
     </Card>
+    :<Loading/>
+}
+    </>
   );
 }

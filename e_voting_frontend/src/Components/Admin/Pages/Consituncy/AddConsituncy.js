@@ -12,8 +12,11 @@ import {
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import React from "react";
+import React, { useState,useEffect } from "react";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import Loading from "../../../Loading/Loading";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
 
 export default function AddConsituncy() {
 
@@ -22,8 +25,35 @@ export default function AddConsituncy() {
         marginLeft: 15,
          width: "90%"
     }
+    useEffect(()=>{
+      getAllInfo();
+  
+    },[]);
+    const [loading,setLoading] = useState(false)
+    const [state,setState] = useState([])
+    async function getAllInfo  () {
+      try{
+        const sres = await axios.get(apis.allstate)
+        setState(sres.data);
+        setLoading(true);
+      }catch(err){
+        console.log(err);
+      }
+    }
+    const [details,setDetails] = useState({
+      constituencyname:"",
+      statename:""
+    })
+    let detailsChanged = (e) =>{
+      setDetails(values => ({...values,[e.target.name]:e.target.value}))
+    }
+    const handleClick = (e)=>{
+      e.preventDefault();
+      axios.post(apis.addconst,details).then((res)=>alert(res.data)).catch((err)=>console.log(err));
+    }
   return (
     <>
+    {loading?
       <div width={200}>
         <DialogTitle id="alert-dialog-title">
           <Avatar style={{ backgroundColor: "#000080", margin: "auto" }}>
@@ -46,7 +76,7 @@ export default function AddConsituncy() {
         <DialogContent>
           <DialogContentText id="alert-dialog-description" width={400}>
             <form>
-              <FormControl
+              {/* <FormControl
                 style={InputStyle}
               >
                 <InputLabel id="demo-multiple-name-label">
@@ -60,12 +90,39 @@ export default function AddConsituncy() {
                     <em>None</em>
                   </MenuItem>
                 </Select>
-              </FormControl>
+              </FormControl> */}
+              <FormControl style={InputStyle}>
+              <InputLabel id="demo-multiple-name-label">State Name</InputLabel>
+
+              <Select
+                input={<OutlinedInput label="StateName" />}
+                // value={details.state}
+                value={details.statename}
+                onChange={(e)=>{
+                  detailsChanged(e);
+                }
+                }
+                inputProps={{
+                  name: "statename",
+                  id: "id",
+                }}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {state.map((item) => {
+                return <MenuItem value={item.statename}>{item.statename}</MenuItem>;
+              })}
+              </Select>
+            </FormControl>
+
 
               <TextField
                 style={InputStyle}
                 id="adhar"
                 label="Consituncy Name"
+                name="constituencyname"
+                onChange={detailsChanged}
                 placeholder="Enter consituncy name"
               />
 
@@ -76,6 +133,7 @@ export default function AddConsituncy() {
                   marginLeft: "37%",
                   backgroundColor: "#000080",
                 }}
+                onClick={handleClick}
                 type="submit"
                 variant="contained"
               >
@@ -85,6 +143,8 @@ export default function AddConsituncy() {
           </DialogContentText>
         </DialogContent>
       </div>
+    : <Loading/>
+  }
     </>
   );
 }

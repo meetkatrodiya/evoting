@@ -11,9 +11,10 @@ const toRender = (
     <Typography variant="h5" fontWeight={"bold"} paddingTop={3} paddingLeft={3}>
       Party wise vote result
     </Typography>
-    <div className="sub-div1">
-      <Card1 />
-      <Card2 />
+    {/* <div> */}
+    <div className="sub-div1" >
+      {/* <Card1 /> */}
+      {/* <Card2 /> */}
       <Card3 />
     </div>
   </>

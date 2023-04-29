@@ -12,8 +12,8 @@ const toRender = (
       State wise vote result
     </Typography>
     <div className="sub-div1">
-      <Card1 />
-      <Card2 />
+      {/* <Card1 /> */}
+      {/* <Card2 /> */}
       <Card3 />
     </div>
   </>

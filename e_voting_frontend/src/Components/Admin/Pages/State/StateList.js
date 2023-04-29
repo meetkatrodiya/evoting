@@ -72,18 +72,18 @@ async function getStates(){
             <TableRow>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                 }}
               >
                 State Name
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: "#000099",
+                  backgroundColor: "#00003B",
                   color: "#fff",
-                  fontSize: 20,
+                  fontSize: 16,
                   width: 10,
                 }}
               >
@@ -95,7 +95,7 @@ async function getStates(){
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  <TableCell>{row.statename}</TableCell>
+                  <TableCell sx={{fontSize:15}}>{row.statename}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"
@@ -122,7 +122,7 @@ async function getStates(){
           onClick={handleClickOpen}
           variant="contained"
           startIcon={<AddCircleIcon />}
-          style={{ backgroundColor: "#000099" }}
+          style={{ backgroundColor: "#00003B" }}
         >
           Add State
         </Button>

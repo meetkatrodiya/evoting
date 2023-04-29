@@ -12,15 +12,54 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import React, { useState } from "react";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
 
-export default function AddParty() {
+export default function AddParty(props) {
 
   const [file, setFile] = useState("");
+  const [logo,setLogo] = useState();
   const handleSave = (e) => {
     let url = URL.createObjectURL(e.target.files[0]);
     setFile(url);
+    setLogo(e.target.files[0]);
   };
 
+  const [details,setDetails] = useState({
+    partyname:"",
+    leadername:""
+  })
+  let detailsChanged = (e) =>{
+    setDetails(values => ({...values,[e.target.name]:e.target.value}))
+    console.log(details)
+  }
+
+  const handleClick = async (e) =>{
+    e.preventDefault();
+    let partylogo = new FormData();
+    partylogo.append("party",JSON.stringify(details));
+    console.log(JSON.stringify(details))
+    partylogo.append("partylogo", logo);
+    console.log(details)
+    axios.post(apis.addparty,partylogo,{
+      headers:{
+        "Content-Type":"multipart/form-data; boundary=<calculated when request is sent>",
+      }
+    }).then((res)=>{
+      alert(res.data)
+      props.check();
+      props.close();
+    }).catch((e)=>console.log(e));
+    // let res = await fetch(apis.addparty,{
+    //   method:'post',
+    //   body:formaData,
+    //   headers:{
+    //     'Content-Type':'multipart/form-data',
+    //   },
+    // });
+    // let resJ = await res.json();
+    // console.log(res);
+  }
   return (
     <>
       <div width={400}>
@@ -44,7 +83,9 @@ export default function AddParty() {
                 fullWidth
                 id="adhar"
                 label="Party Name"
-                placeholder="Enter your adhar card no"
+                placeholder="Enter your party name"
+                name="partyname"
+                onChange={detailsChanged}
               />
 
               <TextField
@@ -76,7 +117,9 @@ export default function AddParty() {
                 fullWidth
                 label="Leader Name"
                 id="voter_id"
-                placeholder="Enter your voter id"
+                placeholder="Enter your Leader name"
+                name="leadername"
+                onChange={detailsChanged}
               />
 
               <Button
@@ -86,8 +129,9 @@ export default function AddParty() {
                   marginLeft: "37%",
                   backgroundColor: "#000080",
                 }}
-                type="submit"
+                type="button"
                 variant="contained"
+                onClick={handleClick}
               >
                 Add
               </Button>

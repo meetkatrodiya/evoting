@@ -37,4 +37,14 @@ public class VoteController {
     public ResponseEntity<?> countCandidateVote(){
         return voteService.countCandidateVote();
     }
+
+    @GetMapping("vote/winnerCandidate")
+    public ResponseEntity<?> winnerCandidate(){
+        return voteService.winnerCandidate();
+    }
+
+    @GetMapping("vote/statePartyCount")
+    public ResponseEntity<?> statePartyCount(){
+        return voteService.statePartyCount();
+    }
 }

@@ -11,7 +11,8 @@ const Index = () => {
 
     const SidebarStyle = {
         backgroundColor: "#00003B",
-        color: "white"
+        color: "white",
+        height:"100vh"
       };
     
   return (
