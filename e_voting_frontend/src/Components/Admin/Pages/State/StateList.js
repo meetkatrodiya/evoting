@@ -27,11 +27,15 @@ import Loading from "../../../Loading/Loading";
 // ];
 
 export default function CandidateList() {
+
+  const [check,setCheck] = React.useState(false);
+
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
+    alert("closed")
     setOpen(false);
   };
   const [rows,setRows] = useState([]);
@@ -39,17 +43,24 @@ const [loading,setLoading] = useState(false);
 
 useEffect(()=>{
   getStates()
-},[rows])
+},[check])
 async function getStates(){
   try{
     const res = await axios.get(apis.allstate);
     setRows(res.data);
     setLoading(true);
+    handlecheck()
   }
   catch(e){
     alert(e.response.data)
   }
 
+}
+const handlecheck = ()=>{
+  if(check)
+    setCheck(false)
+  else
+    setCheck(true)
 }
   return (
     <>
@@ -132,7 +143,7 @@ async function getStates(){
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <AddState />
+          <AddState close={handleClose} check={handlecheck}/>
         </Dialog>
       </Box>
     </Paper>

@@ -44,6 +44,7 @@ export default function App() {
   async function getPartyCount (){
     const res = await axios.get(apis.partycount)
     // .then((res)=>{
+      console.log(res.data)
       setData(res.data.voteCount);
       setParty(res.data.partyList)
       setLoading(true);

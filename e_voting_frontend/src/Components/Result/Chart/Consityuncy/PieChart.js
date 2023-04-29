@@ -87,7 +87,7 @@ export default function App() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.length?rows.map((row) => (
             <TableRow
               key={row.adharid}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -109,7 +109,7 @@ export default function App() {
               </TableCell>
               {/* <TableCell align="right">{row.protein}</TableCell> */}
             </TableRow>
-          ))}
+          )):""}
         </TableBody>
       </Table>
     </TableContainer>

@@ -223,28 +223,31 @@ public class VoteService {
         List<Candidate> winnerList = new ArrayList<Candidate>();
         List<Vote> voteList = voteRepository.findAll();
         List<Constituency> constituencyList = constituencyRepository.findAll();
+        try {
+            for (int i = 0; i < constituencyList.size(); i++) {
+                long maxVote = 0;
+                Candidate temp = new Candidate();
 
-        for(int i=0; i<constituencyList.size(); i++){
-            long maxVote = 0;
-            Candidate temp = new Candidate();
+                for (int j = 0; j < voteList.size(); j++) {
 
-            for(int j=0; j<voteList.size(); j++){
+                    if (constituencyList.get(i).getConstituencyname().equals(voteList.get(j).getCandidate().getConstituency().getConstituencyname())) {
 
-                if(constituencyList.get(i).getConstituencyname().equals(voteList.get(j).getCandidate().getConstituency().getConstituencyname())){
+                        if (voteList.get(j).getVotecount() > maxVote) {
 
-                    if(voteList.get(j).getVotecount() > maxVote){
+                            maxVote = voteList.get(j).getVotecount();
 
-                        maxVote = voteList.get(j).getVotecount();
-
-                        temp = voteList.get(j).getCandidate();
+                            temp = voteList.get(j).getCandidate();
+                        }
                     }
                 }
+                winnerList.add(temp);
             }
-            winnerList.add(temp);
-        }
-        System.out.println(winnerList.size());
+            System.out.println(winnerList.size());
 //        Map<String,Long> candidateVote = candidateVoteCount()
-        return new ResponseEntity<>(winnerList,HttpStatus.OK);
+            return new ResponseEntity<>(winnerList, HttpStatus.OK);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("Not found");
+        }
     }
 
     public ResponseEntity<?> statePartyCount(){

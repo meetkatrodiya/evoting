@@ -29,9 +29,12 @@ import Loading from "../../../Loading/Loading";
 // ];
 
 export default function VoterList() {
+
+  const [check,setCheck] = React.useState(false);
+
   React.useEffect(()=>{
     getVoters()
-  },[])
+  },[check])
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -62,6 +65,7 @@ export default function VoterList() {
     try{
       const res = await axios.get(apis.allvoters)
       setRows(res.data);
+      handlecheck();
       setLoading(true);
     }
     catch(e){
@@ -76,13 +80,20 @@ export default function VoterList() {
     if(window.confirm("Are you sure you want to remove this Voter?") == true){
       axios.delete(`${apis.deletevoter}/${id}`).then((res)=>{
         alert(res.data)
-        getVoters()
+        // getVoters()
+        handlecheck();
       }).catch((err)=>console.log(err))
     }
     else{
       console.log("cancel");
     }
 
+  }
+  const handlecheck = () =>{
+    if(check)
+      setCheck(false)
+    else
+      setCheck(true)
   }
   return (
     <>
@@ -199,7 +210,7 @@ export default function VoterList() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <UpdateVoter input={input} />
+        <UpdateVoter input={input} close={updatehandleClose} check={handlecheck}/>
       </Dialog>
       <Box
         textAlign="center"
