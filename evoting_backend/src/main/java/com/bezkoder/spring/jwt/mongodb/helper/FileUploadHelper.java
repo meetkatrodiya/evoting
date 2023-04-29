@@ -11,7 +11,7 @@ import java.nio.file.StandardCopyOption;
 
 @Component
 public class FileUploadHelper {
-    public final String UPLOAD_DIR = "D:\\evoting\\evoting_backend\\src\\main\\resources\\Static\\PartyLogoImages";
+    public final String UPLOAD_DIR = "D:\\SDP\\evoting\\evoting_backend\\src\\main\\resources\\Static\\PartyLogoImages";
     public FileUploadHelper() throws IOException {
 
     }

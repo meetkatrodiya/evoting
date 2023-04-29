@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import { Typography } from "@mui/material";
 import Table from "@mui/material/Table";
@@ -9,22 +9,39 @@ import TableCell from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import Header from "../Home/Header";
 import "./Evm.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { apis } from "../../../api/bootapi";
+import Loading from "../../Loading/Loading";
 
 function Row(props) {
 
+  const navigate = useNavigate();
   const [style, setStyle] = useState("circle");
   const [disabled, setDisabled] = useState(false);
 
   // Function : When button click Light is on...
-  const clickHandle = () => {
+  const clickHandle = (adharid,voterid) => {
     if(disabled) return;
     setDisabled({disabled: true});
-    // alert("You clicked the button")
-    console.log("clicked!!");
-    setStyle("afterClick_circle");
-    setTimeout(() => {
-      setStyle("circle");
-    }, 3000);
+    const data = {
+      adharid:adharid
+    }
+    axios.put(apis.addvote,data).then((res)=>{
+        axios.put(`${apis.aftervote}/${voterid}`).then((res)=>{
+          console.log("clicked!!");
+          setStyle("afterClick_circle");
+          setTimeout(() => {
+            setStyle("circle");
+          }, 3000);
+          navigate("/officerHome")
+        }).catch((e)=>{
+          console.log(e)
+        }).catch((e)=>{
+          console.log(e)
+        })
+    })
+    
   };
 
   return (
@@ -41,7 +58,7 @@ function Row(props) {
         </TableCell>
         <TableCell>
           <img
-            src={props.logo}
+            src={`data:image/png;base64,${props.logo}`}
             alt="logo"
             className={"h-10 w-11"}
           />
@@ -59,7 +76,7 @@ function Row(props) {
               height: 40,
               fontWeight: "bold",
             }}
-            onClick={() => clickHandle(props)}
+            onClick={() => clickHandle(props.adharid,props.voterid)}
             disabled={disabled}
           >
             Vote
@@ -72,7 +89,26 @@ function Row(props) {
 
 const Evm = (props) => {
 
+  const location = useLocation();
+  const [check,setCheck] = useState(false);
+  const [loading,setLoading] = useState(false)
+  useEffect(()=>{
+    getCandidate()
+  },[check])
+  const [candidates,setCandidates] = useState();
+  const getCandidate = ()=>{
+    axios.get(`${apis.candidatefromconstituency}/${location.state.constituency}`).then((res)=>{
+      setCandidates(res.data);
+      setLoading(true)
+      console.log(res.data);
+    }).catch((err)=>{
+      alert(err.response.data)
+    })
+  }
+  var cnt = 1;
   return (
+    <>
+    {loading ?
     <>
     <Header/>
     <Container>
@@ -108,7 +144,7 @@ const Evm = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-                <Row
+                {/* <Row
                   // key={count}
                   no="1."
                   candidate="Narendra Modi"
@@ -128,10 +164,31 @@ const Evm = (props) => {
                   candidate="Jitendra Chowdhury"
                   party="CPIM"
                   logo="https://imgs.search.brave.com/JjEb89u8oYbAMomZyYOgBlPuSeqNapyAos-MAw5cC9w/rs:fit:474:225:1/g:ce/aHR0cHM6Ly90c2Ux/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5k/SjJibExOV01FcC1K/aWxWUk95ay13SGFI/YSZwaWQ9QXBp"
-                ></Row>
+                ></Row> */}
+                {
+                  candidates.length ?
+                  candidates.map((candidate)=>(
+                    <Row
+                      key={cnt}
+                      no={`${cnt}.`}
+                      candidate={candidate.name}
+                      party={candidate.party.partyname}
+                      logo={candidate.party.partylogo}
+                      adharid={candidate.adharid}
+                      voterid={location.state.voterid}
+                    >
+
+                    </Row>
+                  ))
+                  :"No candidate for this constituency"
+                }
         </TableBody>
       </Table>
     </Container>
+    </>
+    :
+    <Loading/>
+}
     </>
   );
 };

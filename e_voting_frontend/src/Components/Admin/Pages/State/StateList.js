@@ -35,7 +35,7 @@ export default function CandidateList() {
     setOpen(true);
   };
   const handleClose = () => {
-    alert("closed")
+    // alert("closed")
     setOpen(false);
   };
   const [rows,setRows] = useState([]);

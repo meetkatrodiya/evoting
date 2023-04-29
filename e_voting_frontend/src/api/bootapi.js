@@ -24,4 +24,10 @@ export const apis = {
     constituencycount:`${base_url}/api/test/admin/vote/countConstituencyVote`,
     winnercandidate:`${base_url}/api/test/admin/vote/winnerCandidate`,
     statecount:`${base_url}/api/test/admin/vote/statePartyCount`,
+    validate:`${base_url}/api/auth/validateUser`,
+    validateOfficer:`${base_url}/api/auth/validateOfficer`,
+    voterlogin:`${base_url}/api/auth/voterLogin`,
+    candidatefromconstituency:`${base_url}/api/test/admin/candidate/getCandidate`,
+    addvote:`${base_url}/api/test/admin/vote/addVote`,
+    aftervote:`${base_url}/api/auth/aftervote`,
 }

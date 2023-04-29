@@ -1,26 +1,37 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Avatar, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+
+import {
+  Avatar,
+  Button,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+  Typography,
+} from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { apis } from "../../../api/bootapi";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-export default function VoterLogin() {
+import { apis } from "../../api/bootapi";
+
+function LoginOfficer() {
+  const ButtonStyle = {
+    backgroundColor: "#000080",
+    marginTop: 20,
+    marginLeft: "37%",
+    width: "30%",
+  };
   const InputStyle = {
     marginTop: 10,
     marginLeft: 15,
     width: "90%",
-  };
-
-  const ButtonStyle = {
-    marginTop: 12,
-    backgroundColor: "#000080",
-    marginLeft: "37%",
-    width: "30%",
   };
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -28,88 +39,62 @@ export default function VoterLogin() {
     event.preventDefault();
   };
 
+  const isAdmin =true;
+
   const [loginInfo,setLoginInfo] = useState();
   const navigate = useNavigate();
   const changeInfo = (e) =>{
     setLoginInfo(values => ({...values,[e.target.name]:e.target.value}))
-
-  }
-
-  const clear = ()=>{
-    setLoginInfo({
-    voterid:"",
-    password:""
-    })
+    
   }
   const login = (e)=>{
     e.preventDefault();
-    axios.post(apis.voterlogin,loginInfo).then((res)=>{
-      clear();
-      console.log(res.data);
-
-      alert("Logged in Successfully");
-      const data = {
-        constituency:res.data,
-        voterid:loginInfo.voterid
-      }
-      navigate("/voterLogin",{state:data})
+    axios.post(apis.login,loginInfo).then((res)=>{
       // console.log(res.data);
-      // alert(res.data)
+      localStorage.setItem("token",res.data.accessToken)
+      alert("Logedin Successfully");
+      navigate("/officerHome")
+      // console.log(res.data);
     }).catch((err)=>{
-      clear()
-      alert(err.response.data)
+      alert("Bad Credantial")
       console.log(err);
     })
   }
-
   return (
-    <div width={400}>
+    <div>
       <DialogTitle id="alert-dialog-title">
         <Avatar style={{ backgroundColor: "#000080", margin: "auto" }}>
-          <AddCircleOutlineOutlinedIcon />
+          <AccountCircleIcon />
         </Avatar>
         <h2
+          className="headerStyle"
           style={{
             margin: "auto",
-            width: "45%",
+            width: "19%",
             fontWeight: "bold",
             fontSize: 25,
           }}
         >
-          Voter Login
+          Presiding Officer Login
         </h2>
-        <Typography style={{ margin: "auto", width: "68%" }}>
+        <Typography style={{ margin: "auto", width: "80%" }}>
           Please fill your information correctly!
         </Typography>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description" width={400}>
+        <DialogContentText id="alert-dialog-description">
           <form>
-            {/* <form onSubmit={handleForm}> */}
-            {/* <TextField
-              style={InputStyle}
-              fullWidth
-              label="Name"
-              placeholder="Enter your name"
-              id="name"
-            /> */}
-            {/* <TextField
-              style={InputStyle}
-              fullWidth
-              id="adharId"
-              label="Adhar Id"
-              placeholder="Enter your adhar card no"
-            /> */}
             <TextField
               style={InputStyle}
-              fullWidth
-              id="VoterId"
-              label="Voter Id"
-              placeholder="Enter your voter id"
+              id="outlined-basic"
+              label="User name"
+              variant="outlined"
               name="voterid"
               onChange={changeInfo}
+              required
             />
-             <FormControl variant="outlined" style={InputStyle}>
+            <br />
+            <FormControl variant="outlined" style={InputStyle}>
               <InputLabel htmlFor="outlined-adornment-password">
                 Password
               </InputLabel>
@@ -139,7 +124,8 @@ export default function VoterLogin() {
                 label="Password"
               />
             </FormControl>
-            <Button  style={ButtonStyle} variant="contained" onClick={login}>
+            <Button   style={ButtonStyle} type="submit" variant="contained" onClick={login}>
+            {/* <Button component={Link} to={isAdmin ? "/home" : "/officerHome"} style={ButtonStyle} type="submit" variant="contained" onClick={}> */}
               Login
             </Button>
           </form>
@@ -148,3 +134,5 @@ export default function VoterLogin() {
     </div>
   );
 }
+
+export default LoginOfficer;

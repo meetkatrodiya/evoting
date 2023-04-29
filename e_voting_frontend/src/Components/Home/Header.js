@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Logo from "../../assets/logo.png";
 import { Dialog } from "@mui/material";
 import Login from "../Auth/Login";
-
+import OfficerLogin from "../Auth/LoginOfficer";
 function Header() {
   const AppbarStyle = {
     backgroundColor: "#00003B",
@@ -28,8 +28,13 @@ function Header() {
   };
 
   const [open, setOpen] = React.useState(false);
+  const [officeropen, officersetOpen] = React.useState(false);  
+
   const handleClickOpen = () => {
     setOpen(true);
+  };
+  const handleClickOfficerOpen = () => {
+    officersetOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
@@ -43,9 +48,18 @@ function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             E - Voting System
           </Typography>
-          <Button color="inherit" onClick={handleClickOpen} style={ButtonStyle}>
+          <Button color="inherit" onClick={handleClickOfficerOpen} style={ButtonStyle}>
             Presiding Officer Login
           </Button>
+          <Dialog
+            open={officeropen}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <OfficerLogin/>
+            
+          </Dialog>
           <Button color="inherit" onClick={handleClickOpen} style={ButtonStyle}>
            Admin Login
           </Button>

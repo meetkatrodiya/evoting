@@ -17,6 +17,7 @@ import { Dialog } from "@mui/material";
 import axios from "axios";
 import { apis } from "../../../../api/bootapi";
 import Loading from "../../../Loading/Loading";
+import { useNavigate } from "react-router-dom";
 
 function createData(partyName, logo, leaderName) {
   return { partyName, logo, leaderName };
@@ -73,7 +74,16 @@ export default function CandidateList() {
 
   const [rows,setRows] = React.useState([]);
   const [loading,setLoading] = React.useState(false);
+  const navigate = useNavigate();
+  
   React.useEffect(()=>{
+    axios.get(apis.validate,{headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}}).then((res)=>{
+      console.log("here")
+      // setVisible(true)
+    }).catch((err)=>{
+      console.log(err);
+      navigate("/")
+    })
     getAllParty();
   },[check]);
   async function getAllParty(){

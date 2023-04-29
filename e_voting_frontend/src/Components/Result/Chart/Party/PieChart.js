@@ -30,11 +30,14 @@ export const options = {
 };
 
 export default function App() {
+
+
+  const [check,setCheck] = useState(false)
   const [dat,setData] = useState({});
   useEffect(()=>{
     getPartyCount();
 
-  },[dat]);
+  },[check]);
   const [loading,setLoading] = useState(false);
   var d2 = 
       [
@@ -46,12 +49,19 @@ export default function App() {
     // .then((res)=>{
       console.log(res.data)
       setData(res.data.voteCount);
-      setParty(res.data.partyList)
+      setParty(res.data.partyList);
+      handlecheck()
       setLoading(true);
   }
 
   const [first,setFirst] = useState(true)
 
+  const handlecheck = ()=>{
+    if(check)
+      setCheck(false)
+    else
+      setCheck(true)
+  }
   return (
     <>
     {loading?

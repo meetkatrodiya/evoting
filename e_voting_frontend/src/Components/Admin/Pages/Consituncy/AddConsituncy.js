@@ -18,7 +18,7 @@ import Loading from "../../../Loading/Loading";
 import axios from "axios";
 import { apis } from "../../../../api/bootapi";
 
-export default function AddConsituncy() {
+export default function AddConsituncy(props) {
 
     const InputStyle = {
         marginTop: 10, 
@@ -49,7 +49,11 @@ export default function AddConsituncy() {
     }
     const handleClick = (e)=>{
       e.preventDefault();
-      axios.post(apis.addconst,details).then((res)=>alert(res.data)).catch((err)=>console.log(err));
+      axios.post(apis.addconst,details).then((res)=>{
+        alert(res.data)
+        props.check()
+        props.close()
+      }).catch((err)=>console.log(err));
     }
   return (
     <>

@@ -17,6 +17,7 @@ import UpdateCandidate from "./UpdateCandidate";
 import axios from "axios";
 import { apis } from "../../../../api/bootapi";
 import Loading from "../../../Loading/Loading";
+import { useNavigate } from "react-router-dom";
 
 // function createData(name, mobileNo, dob, consituncy, state) {
 //   return { name, mobileNo, dob, consituncy, state };
@@ -72,7 +73,16 @@ export default function CandidateList() {
   const [id,setId] = React.useState();
   const [loading,setLoading] = React.useState(false);
 const [rows,setRows] = React.useState([]);
+const navigate = useNavigate();
 React.useEffect(()=>{
+
+  axios.get(apis.validate,{headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}}).then((res)=>{
+    console.log("here")
+  }).catch((err)=>{
+    console.log(err);
+    navigate("/")
+  })
+
   getAllCandidate();
 },[check],[id])
 async function getAllCandidate(){
@@ -90,9 +100,10 @@ async function getAllCandidate(){
   };
   function dateFormate(dt){
     const d = new Date(dt)
-    const month = d.getMonth();
-    const year = d.getFullYear();
-    const day = d.getDate();
+    var year = d.getFullYear();
+    var month = ("0"+(d.getMonth()+1)).slice(-2);
+    var day = ("0"+d.getDate()).slice(-2);
+    // const day = d.getDate();
     return `${year}-${month}-${day}`
   }
   const [updateopen, updatesetOpen] = React.useState(false);
@@ -287,7 +298,7 @@ async function getAllCandidate(){
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <AddCandidate close={addhandleClose} />
+          <AddCandidate close={addhandleClose} check={handlecheck} />
         </Dialog>
       </Box>
     </Paper>

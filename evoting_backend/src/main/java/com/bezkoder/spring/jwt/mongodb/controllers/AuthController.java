@@ -12,6 +12,7 @@ import com.bezkoder.spring.jwt.mongodb.repository.ConstituencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -54,9 +55,65 @@ public class AuthController {
 	@Autowired
 	private ConstituencyRepository constituencyRepository;
 
+
+	@GetMapping("/validateUser")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity validateUser(@RequestHeader("Authorization") String token){
+		return ResponseEntity.ok("Admin");
+	}
+
+	@GetMapping("/validateOfficer")
+	@PreAuthorize("hasRole('ROLE_PRESIDING')")
+	public ResponseEntity validateOfficer(@RequestHeader("Authorization") String token){
+		return ResponseEntity.ok("Presiding Officer");
+	}
+
+	@PutMapping("aftervote/{voterid}")
+	public ResponseEntity<?> aftervote(@PathVariable("voterid") String voterid){
+		if(voterid == null){
+			return ResponseEntity.internalServerError().body("No Voter found!!");
+		}
+		User user = userRepository.findByVoterid(voterid).get();
+		if(user != null){
+			user.setIsVoted(true);
+			userRepository.save(user);
+			return ResponseEntity.ok("Voted");
+		}
+		return ResponseEntity.internalServerError().body("No Voter Found");
+	}
+	@PostMapping("/voterLogin")
+	public ResponseEntity<?> voterLogin(@Valid @RequestBody LoginRequest loginRequest){
+		if(loginRequest == null){
+			return ResponseEntity.internalServerError().body("Fill details");
+		}
+		User user = userRepository.findByVoterid(loginRequest.getVoterid()).get();
+		if(user != null){
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getVoterid(), loginRequest.getPassword()));
+
+			if(authentication.isAuthenticated()) {
+				if (user.getIsVoted() == true) {
+					return ResponseEntity.internalServerError().body("Already Voted");
+				}
+				else {
+					return ResponseEntity.ok(user.getConstituency().getConstituencyname());
+				}
+			}
+			else {
+				return ResponseEntity.internalServerError().body("Bad Credentials");
+			}
+
+		}
+		else{
+			return ResponseEntity.internalServerError().body("Bad Credentials!!");
+		}
+	}
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
+		if(loginRequest == null){
+			return ResponseEntity.internalServerError().body("Fill details");
+		}
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getVoterid(), loginRequest.getPassword()));
 
@@ -65,9 +122,13 @@ public class AuthController {
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
 		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-				.collect(Collectors.toList());
+				.map(item -> {
 
+					System.out.println(item.getAuthority());
+					return item.getAuthority();
+				})
+				.collect(Collectors.toList());
+		System.out.println(userDetails.getAuthorities());
 		return ResponseEntity.ok(new JwtResponse(jwt,
 												 userDetails.getId(), 
 												 userDetails.getUsername(), 

@@ -21,12 +21,20 @@ import { apis } from "../../../../api/bootapi";
 import Loading from "../../../Loading/Loading";
 import { useNavigate } from "react-router-dom";
 
-export default function AddCandidate({close}) {
+export default function AddCandidate({close,check}) {
+  
+  const navigate = useNavigate();
   useEffect(()=>{
+    axios.get(apis.validate,{headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}}).then((res)=>{
+      console.log("here")
+    }).catch((err)=>{
+      console.log(err);
+      navigate("/")
+    })
     getAllInfo();
 
   },[]);
-  const navigate = useNavigate();
+  
   const InputStyle = {
     marginTop: 10,
     marginLeft: 15,
@@ -97,6 +105,7 @@ export default function AddCandidate({close}) {
       (res)=>{
         console.log(res.data)
       alert(res.data)
+      check();
       close();
       // navigate("/candidate")
       }

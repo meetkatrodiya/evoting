@@ -17,20 +17,27 @@ import axios from 'axios';
 export default function App() {
 
   // const [rows,setRows] = React.useState(new Map());
+  const [check,setCheck] = React.useState(false)
   const [rows,setRows] = React.useState([]);
   const [loading,setLoading] = React.useState(false);
   React.useEffect(()=>{
     getStateCount();
-  },[]);
+  },[check]);
   async function getStateCount (){
     const res = await axios.get(apis.statecount);
     // .then((res)=>{
       // setData(res.data.voteCount);
       // setParty(res.data.partyList)
       setRows(res.data);
+      handlecheck()
       setLoading(true);
   }
-
+  const handlecheck = ()=>{
+    if(check)
+      setCheck(false)
+    else
+      setCheck(true)
+  }
   return (
     <>
     {loading?

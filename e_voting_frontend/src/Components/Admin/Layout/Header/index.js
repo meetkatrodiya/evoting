@@ -7,10 +7,33 @@ import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { apis } from "../../../../api/bootapi";
 
 const drawerWidth = 240;
 
 const Index = () => {
+
+  const [visible,setVisible] = React.useState(false)
+  const navigate = useNavigate()
+  React.useEffect(()=>{
+    axios.get(apis.validate,{headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}}).then((res)=>{
+      console.log("here")
+      setVisible(true)
+    }).catch((err)=>{
+      console.log(err);
+      navigate("/")
+    })
+  },[])
+
+
+  const logout = ()=>{
+    localStorage.removeItem("token");
+    navigate("/")
+  }
+
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const Search = styled("div")(({ theme }) => ({
@@ -64,6 +87,8 @@ const Index = () => {
       };
 
     return(
+      <>{
+        visible&&
         <AppBar
         style={SidebarStyle}
         position="fixed"
@@ -89,7 +114,7 @@ const Index = () => {
             Welcome, Admin
           </Typography>
 
-          <Search>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -97,9 +122,12 @@ const Index = () => {
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
             />
-          </Search>
+          </Search> */}
+          <Button type="button" onClick={logout}>Logout</Button>
         </Toolbar>
       </AppBar>
+}
+</>
     );
 }
 

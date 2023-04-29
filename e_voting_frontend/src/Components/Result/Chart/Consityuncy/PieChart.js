@@ -53,21 +53,28 @@ function createData(name, calories, fat, carbs, protein) {
 
 export default function App() {
 
+  const [check,setCheck] = React.useState(false)
   // const [rows,setRows] = React.useState(new Map());
   const [rows,setRows] = React.useState([]);
   const [loading,setLoading] = React.useState(false);
   React.useEffect(()=>{
     getConstituencyCount();
-  },[]);
+  },[check]);
   async function getConstituencyCount (){
     const res = await axios.get(apis.winnercandidate);
     // .then((res)=>{
       // setData(res.data.voteCount);
       // setParty(res.data.partyList)
       setRows(res.data);
+      handlecheck()
       setLoading(true);
   }
-
+  const handlecheck = ()=>{
+    if(check)
+      setCheck(false)
+    else
+      setCheck(true)
+  }
   return (
     <>
     {loading?

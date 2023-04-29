@@ -30,6 +30,8 @@ import Loading from "../../../Loading/Loading";
 
 export default function CandidateList() {
 
+
+  const [check,setCheck] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -42,16 +44,23 @@ export default function CandidateList() {
   const [rows,setRows] = useState([])
   useEffect(()=>{
     getAllConstituency();
-  },[rows])
+  },[check])
   async function getAllConstituency(){
     try{
       const res = await axios.get(apis.allconstituency)
       setRows(res.data);
+      handlecheck();
       setLoading(true);
     }
     catch(e){
       alert(e.response.data);
     }
+  }
+  const handlecheck = ()=>{
+    if(check)
+      setCheck(false)
+    else
+      setCheck(true)
   }
   return (
     <>
@@ -139,7 +148,7 @@ export default function CandidateList() {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <AddConsituncy/>
+            <AddConsituncy close={handleClose} check={handlecheck}/>
             
           </Dialog>
       </Box>
