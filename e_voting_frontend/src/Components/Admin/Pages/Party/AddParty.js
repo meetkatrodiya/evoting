@@ -16,50 +16,44 @@ import axios from "axios";
 import { apis } from "../../../../api/bootapi";
 
 export default function AddParty(props) {
-
   const [file, setFile] = useState("");
-  const [logo,setLogo] = useState();
+  const [logo, setLogo] = useState();
   const handleSave = (e) => {
     let url = URL.createObjectURL(e.target.files[0]);
     setFile(url);
     setLogo(e.target.files[0]);
   };
 
-  const [details,setDetails] = useState({
-    partyname:"",
-    leadername:""
-  })
-  let detailsChanged = (e) =>{
-    setDetails(values => ({...values,[e.target.name]:e.target.value}))
-    console.log(details)
-  }
+  const [details, setDetails] = useState({
+    partyname: "",
+    leadername: "",
+  });
+  let detailsChanged = (e) => {
+    setDetails((values) => ({ ...values, [e.target.name]: e.target.value }));
+    console.log(details);
+  };
 
-  const handleClick = async (e) =>{
+  const handleClick = async (e) => {
     e.preventDefault();
     let partylogo = new FormData();
-    partylogo.append("party",JSON.stringify(details));
-    console.log(JSON.stringify(details))
+    partylogo.append("party", JSON.stringify(details));
+    console.log(JSON.stringify(details));
     partylogo.append("partylogo", logo);
-    console.log(details)
-    axios.post(apis.addparty,partylogo,{
-      headers:{
-        "Content-Type":"multipart/form-data; boundary=<calculated when request is sent>",
-      }
-    }).then((res)=>{
-      alert(res.data)
-      props.check();
-      props.close();
-    }).catch((e)=>console.log(e));
-    // let res = await fetch(apis.addparty,{
-    //   method:'post',
-    //   body:formaData,
-    //   headers:{
-    //     'Content-Type':'multipart/form-data',
-    //   },
-    // });
-    // let resJ = await res.json();
-    // console.log(res);
-  }
+    console.log(details);
+    axios
+      .post(apis.addparty, partylogo, {
+        headers: {
+          "Content-Type":
+            "multipart/form-data; boundary=<calculated when request is sent>",
+        },
+      })
+      .then((res) => {
+        alert(res.data);
+        props.check();
+        props.close();
+      })
+      .catch((e) => console.log(e));
+  };
   return (
     <>
       <div width={400}>
@@ -67,13 +61,19 @@ export default function AddParty(props) {
           <Avatar style={{ backgroundColor: "#000080", margin: "auto" }}>
             <AddCircleOutlineOutlinedIcon />
           </Avatar>
-          <h2 style={{
-            margin: "auto",
-            width: "30%",
-            fontWeight: "bold",
-            fontSize: 25,
-          }}>Add Party</h2>
-          <Typography style={{ margin: "auto", width: "66%" }}>Please fill your information correctly!</Typography>
+          <h2
+            style={{
+              margin: "auto",
+              width: "30%",
+              fontWeight: "bold",
+              fontSize: 25,
+            }}
+          >
+            Add Party
+          </h2>
+          <Typography style={{ margin: "auto", width: "66%" }}>
+            Please fill your information correctly!
+          </Typography>
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description" width={400}>
@@ -91,7 +91,6 @@ export default function AddParty(props) {
               <TextField
                 style={{ marginTop: 15 }}
                 name="file"
-                // value={file}
                 type="file"
                 fullWidth
                 label="Party Logo"

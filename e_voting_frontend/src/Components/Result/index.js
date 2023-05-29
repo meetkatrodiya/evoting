@@ -1,37 +1,43 @@
 import React from "react";
 import "./style.css";
 import { Typography } from "@mui/material";
+import Result from "./Chart/Party/Result";
+import "./style.css";
+import axios from "axios";
+import { apis } from "../../api/bootapi";
 
 function Index() {
-  return (
+  const [resStart, setResStart] = React.useState(Date());
+  const [current, setCurrent] = React.useState(Date());
+  React.useEffect(() => {
+    const d = new Date();
+    setCurrent(d);
+    axios
+      .get(apis.resultst)
+      .then((res) => {
+        const d = new Date(`${res.data}`);
+        console.log(d);
+        setResStart(d);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  return current >= resStart ? (
     <>
-    <Typography>
+      <Typography
+        variant="h5"
+        fontWeight={"bold"}
+        paddingTop={3}
+        paddingLeft={3}
+      >
         Result
       </Typography>
+      <div className="sub-div1">
+        <Result />
+      </div>
     </>
+  ) : (
+    `Result is not declared yet check result after ${resStart}`
   );
 }
-
-// import React from "react";
-// import "./style.css";
-
-// function Index () {
-//     return (
-//     <>
-//     <div className="main-div">
-//     <div className="sub-div1">
-//         <Card1/>
-//         <Card2/>
-//         <Card3/>
-//         {/* <Card4/> */}
-//     </div>
-//     <div className="sub-div2">
-//         <Card5/>
-//         <Card6/>
-//     </div>
-//     </div>
-//     </>
-//     );
-// }
 
 export default Index;

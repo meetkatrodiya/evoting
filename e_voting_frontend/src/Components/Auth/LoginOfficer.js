@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-
 import {
   Avatar,
   Button,
@@ -17,7 +16,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apis } from "../../api/bootapi";
 
@@ -39,27 +38,27 @@ function LoginOfficer() {
     event.preventDefault();
   };
 
-  const isAdmin =true;
+  const isAdmin = true;
 
-  const [loginInfo,setLoginInfo] = useState();
+  const [loginInfo, setLoginInfo] = useState();
   const navigate = useNavigate();
-  const changeInfo = (e) =>{
-    setLoginInfo(values => ({...values,[e.target.name]:e.target.value}))
-    
-  }
-  const login = (e)=>{
+  const changeInfo = (e) => {
+    setLoginInfo((values) => ({ ...values, [e.target.name]: e.target.value }));
+  };
+  const login = (e) => {
     e.preventDefault();
-    axios.post(apis.login,loginInfo).then((res)=>{
-      // console.log(res.data);
-      localStorage.setItem("token",res.data.accessToken)
-      alert("Logedin Successfully");
-      navigate("/officerHome")
-      // console.log(res.data);
-    }).catch((err)=>{
-      alert("Bad Credantial")
-      console.log(err);
-    })
-  }
+    axios
+      .post(apis.login, loginInfo)
+      .then((res) => {
+        localStorage.setItem("token", res.data.accessToken);
+        alert("Logedin Successfully");
+        navigate("/officerHome");
+      })
+      .catch((err) => {
+        alert("Bad Credantial");
+        console.log(err);
+      });
+  };
   return (
     <div>
       <DialogTitle id="alert-dialog-title">
@@ -70,14 +69,14 @@ function LoginOfficer() {
           className="headerStyle"
           style={{
             margin: "auto",
-            width: "19%",
+            width: "80%",
             fontWeight: "bold",
             fontSize: 25,
           }}
         >
           Presiding Officer Login
         </h2>
-        <Typography style={{ margin: "auto", width: "80%" }}>
+        <Typography style={{ margin: "auto", width: "75%" }}>
           Please fill your information correctly!
         </Typography>
       </DialogTitle>
@@ -101,14 +100,13 @@ function LoginOfficer() {
               <OutlinedInput
                 id="outlined-adornment-password"
                 onChange={changeInfo}
-                      name="password"
-                      required
+                name="password"
+                required
                 type={showPassword ? "text" : "password"}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
@@ -124,8 +122,13 @@ function LoginOfficer() {
                 label="Password"
               />
             </FormControl>
-            <Button   style={ButtonStyle} type="submit" variant="contained" onClick={login}>
-            {/* <Button component={Link} to={isAdmin ? "/home" : "/officerHome"} style={ButtonStyle} type="submit" variant="contained" onClick={}> */}
+            <Button
+              style={ButtonStyle}
+              type="submit"
+              variant="contained"
+              onClick={login}
+            >
+              {/* <Button component={Link} to={isAdmin ? "/home" : "/officerHome"} style={ButtonStyle} type="submit" variant="contained" onClick={}> */}
               Login
             </Button>
           </form>

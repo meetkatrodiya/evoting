@@ -24,11 +24,11 @@ function Header() {
     color: "#000080",
     opacity: 0.5,
     padding: 7,
-    marginLeft: 10
+    marginLeft: 10,
   };
 
   const [open, setOpen] = React.useState(false);
-  const [officeropen, officersetOpen] = React.useState(false);  
+  const [officeropen, officersetOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,7 +48,11 @@ function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             E - Voting System
           </Typography>
-          <Button color="inherit" onClick={handleClickOfficerOpen} style={ButtonStyle}>
+          <Button
+            color="inherit"
+            onClick={handleClickOfficerOpen}
+            style={ButtonStyle}
+          >
             Presiding Officer Login
           </Button>
           <Dialog
@@ -57,11 +61,10 @@ function Header() {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <OfficerLogin/>
-            
+            <OfficerLogin />
           </Dialog>
           <Button color="inherit" onClick={handleClickOpen} style={ButtonStyle}>
-           Admin Login
+            Admin Login
           </Button>
 
           <Dialog
@@ -71,7 +74,6 @@ function Header() {
             aria-describedby="alert-dialog-description"
           >
             <Login />
-            
           </Dialog>
         </Toolbar>
       </AppBar>

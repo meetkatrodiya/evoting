@@ -1,4 +1,19 @@
-import { Avatar, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import DialogContent from "@mui/material/DialogContent";
@@ -8,15 +23,15 @@ import Loading from "../../../Loading/Loading";
 import axios from "axios";
 import { apis } from "../../../../api/bootapi";
 
-export default function AddVoter() {
+export default function AddVoter({ close, check }) {
   const InputStyle = {
     marginTop: 10,
     marginLeft: 15,
     width: "90%",
   };
   useEffect(() => {
-    getAllConstituency()
-  }, [])
+    getAllConstituency();
+  }, []);
 
   const ButtonStyle = {
     marginTop: 12,
@@ -28,38 +43,30 @@ export default function AddVoter() {
   const [loading, setLoading] = useState(false);
   async function getAllConstituency() {
     try {
-      const res = await axios.get(apis.allconstituency)
+      const res = await axios.get(apis.allconstituency);
       setConsti(res.data);
       setLoading(true);
-    }
-    catch (e) {
+    } catch (e) {
       alert(e.response.data);
     }
   }
   const [details, setDetails] = useState({
-    // voterid: "",
-    // adharid: 0,
-    // email: "",
-    // roles: ["user"],
-    // password: "",
-    // name: "",
-    // constituency: "",
-    "voterid":"",
-    "adharid":0,
-    "email":"",
-    "roles":[],
-    "password":"",
-    "name":"",
-    "constituency":""
-  })
+    voterid: "",
+    adharid: 0,
+    email: "",
+    roles: [],
+    password: "",
+    name: "",
+    constituency: "",
+  });
   const [role, setRole] = useState({
     voter: false,
-    presidingOfficer: false
-  })
+    presidingOfficer: false,
+  });
   const { voter, presidingOfficer } = role;
   let detailsChanged = (e) => {
-    setDetails(values => ({ ...values, [e.target.name]: e.target.value }))
-  }
+    setDetails((values) => ({ ...values, [e.target.name]: e.target.value }));
+  };
   const handleChange = (event) => {
     setRole({
       ...role,
@@ -68,21 +75,26 @@ export default function AddVoter() {
   };
   const handleClick = (e) => {
     e.preventDefault();
-    if(role.voter == true){
-      details.roles.push("user")
+    if (role.voter == true) {
+      details.roles.push("user");
     }
-    if(role.presidingOfficer == true){
-      details.roles.push("presiding")
+    if (role.presidingOfficer == true) {
+      details.roles.push("presiding");
     }
-    console.log(details)
-    axios.post(apis.signup, details).then((res) =>{
-      console.log(res.data)
-      alert(res.data.message)
-    }).catch((err) =>alert(err.response.data.message))
-  }
+    console.log(details);
+    axios
+      .post(apis.signup, details)
+      .then((res) => {
+        console.log(res.data);
+        alert(res.data.message);
+        check();
+        close();
+      })
+      .catch((err) => alert(err.response.data.message));
+  };
   return (
     <>
-      {loading ?
+      {loading ? (
         <div width={400}>
           <DialogTitle id="alert-dialog-title">
             <Avatar style={{ backgroundColor: "#000080", margin: "auto" }}>
@@ -105,7 +117,6 @@ export default function AddVoter() {
           <DialogContent>
             <DialogContentText id="alert-dialog-description" width={400}>
               <form>
-                {/* <form onSubmit={handleForm}> */}
                 <TextField
                   style={InputStyle}
                   fullWidth
@@ -155,15 +166,14 @@ export default function AddVoter() {
                   onChange={detailsChanged}
                 />
                 <FormControl style={InputStyle}>
-                  <InputLabel id="demo-multiple-name-label">Constituency</InputLabel>
+                  <InputLabel id="demo-multiple-name-label">
+                    Constituency
+                  </InputLabel>
 
                   <Select
                     input={<OutlinedInput label="Constituency" />}
                     value={details.constituency}
-                    // // value={partyList.partyname}
-                    onChange={
-                      detailsChanged
-                    }
+                    onChange={detailsChanged}
                     inputProps={{
                       name: "constituency",
                       id: "id",
@@ -173,39 +183,58 @@ export default function AddVoter() {
                       <em>None</em>
                     </MenuItem>
                     {consti.map((item) => {
-                      return <MenuItem value={item.constituencyname}>{item.constituencyname}</MenuItem>;
+                      return (
+                        <MenuItem value={item.constituencyname}>
+                          {item.constituencyname}
+                        </MenuItem>
+                      );
                     })}
                   </Select>
                 </FormControl>
-                <Box sx={{ display: 'flex' }}>
+                <Box sx={{ display: "flex" }}>
                   <FormControl style={InputStyle}>
-                    <FormLabel component="legend">Pick role accordingly!!</FormLabel>
+                    <FormLabel component="legend">
+                      Pick role accordingly!!
+                    </FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={
-                          <Checkbox checked={voter} onChange={handleChange} name="voter" />
+                          <Checkbox
+                            checked={voter}
+                            onChange={handleChange}
+                            name="voter"
+                          />
                         }
                         label="Voter"
                       />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={presidingOfficer} onChange={handleChange} name="presidingOfficer" />
+                          <Checkbox
+                            checked={presidingOfficer}
+                            onChange={handleChange}
+                            name="presidingOfficer"
+                          />
                         }
                         label="Presiding Officer"
                       />
                     </FormGroup>
-                    {/* <FormHelperText>You can display an error</FormHelperText> */}
                   </FormControl>
                 </Box>
-                <Button style={ButtonStyle} type="button" variant="contained" onClick={handleClick}>
+                <Button
+                  style={ButtonStyle}
+                  type="button"
+                  variant="contained"
+                  onClick={handleClick}
+                >
                   Add
                 </Button>
               </form>
             </DialogContentText>
           </DialogContent>
         </div>
-        : <Loading />
-      }
+      ) : (
+        <Loading />
+      )}
     </>
   );
 }

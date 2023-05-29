@@ -30,4 +30,11 @@ export const apis = {
     candidatefromconstituency:`${base_url}/api/test/admin/candidate/getCandidate`,
     addvote:`${base_url}/api/test/admin/vote/addVote`,
     aftervote:`${base_url}/api/auth/aftervote`,
+    launch:`${base_url}/api/test/admin/launchElection`,
+    rs:`${base_url}/api/test/admin/checkRegistrationStart`,
+    re:`${base_url}/api/test/admin/checkRegistrationEnd`,
+    es:`${base_url}/api/test/admin/checkElectionStart`,
+    ee:`${base_url}/api/test/admin/checkElectionEnd`,
+    resultst:`${base_url}/api/test/admin/checkResult`,
+    info:`${base_url}/api/test/admin/GetInfo`,
 }

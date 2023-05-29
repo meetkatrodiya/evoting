@@ -5,8 +5,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Logo from "../../../assets/logo.png";
-import { Dialog } from "@mui/material";
-import VoterLogin from "../Login/VoterLogin";
 import { Link } from "react-router-dom";
 
 function Header() {
@@ -28,42 +26,17 @@ function Header() {
     marginLeft: 10,
   };
 
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" style={AppbarStyle}>
         <Toolbar>
           <img src={Logo} alt="" style={LogoStyle} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            E - Voting System
+            Welcome, Presiding Officer
           </Typography>
-          <Button color="inherit" onClick={handleClickOpen} style={ButtonStyle}>
-            Voter Login
+          <Button component={Link} to="/" color="inherit" style={ButtonStyle}>
+            Logout
           </Button>
-          <Button
-            component={Link}
-            to="/officerHome"
-            color="inherit"
-            style={ButtonStyle}
-          >
-            Back
-          </Button>
-
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <VoterLogin />
-          </Dialog>
         </Toolbar>
       </AppBar>
     </Box>

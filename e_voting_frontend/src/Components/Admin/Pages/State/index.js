@@ -8,28 +8,24 @@ import { apis } from "../../../../api/bootapi";
 const toRender = <StateList />;
 
 const Index = () => {
+  const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    axios
+      .get(apis.validate, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        console.log("here");
+        setVisible(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/");
+      });
+  }, []);
 
-  const [visible,setVisible] = useState(false);
-    const navigate = useNavigate();
-    useEffect(()=>{
-        axios.get(apis.validate,{headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}}).then((res)=>{
-            console.log("here")
-            setVisible(true)
-          }).catch((err)=>{
-            console.log(err);
-            navigate("/")
-          })
-    },[])
-
-
-  return (
-    <>
-      {
-        visible &&
-        <Layout render={toRender} />
-      }
-    </>
-  );
+  return <>{visible && <Layout render={toRender} />}</>;
 };
 
 export default Index;

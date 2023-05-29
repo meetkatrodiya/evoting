@@ -1,18 +1,18 @@
-.main-div{
-    display: block;
-    background-color: #f2f2f2;
-    margin: 3%;
-    padding: 3%;
+.main-div {
+  display: block;
+  background-color: #f2f2f2;
+  margin: 3%;
+  padding: 3%;
 }
-.sub-div1{
-    display: flex;
-    background-color: #f2f2f2;
-    padding: 3%;
-    margin-left: 3%;
-    margin-right: 3%;
-    margin-top: 1%;
+.sub-div1 {
+  display: flex;
+  background-color: #f2f2f2;
+  padding: 3%;
+  margin-left: 3%;
+  margin-right: 3%;
+  margin-top: 1%;
 }
 
-.sub-div2{
-    display: flex;
+.sub-div2 {
+  display: flex;
 }

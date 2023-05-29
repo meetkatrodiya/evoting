@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-
 import {
   Avatar,
   Button,
@@ -12,6 +8,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -39,27 +38,27 @@ function Login() {
     event.preventDefault();
   };
 
-  const isAdmin =true;
+  const isAdmin = true;
 
-  const [loginInfo,setLoginInfo] = useState();
+  const [loginInfo, setLoginInfo] = useState();
   const navigate = useNavigate();
-  const changeInfo = (e) =>{
-    setLoginInfo(values => ({...values,[e.target.name]:e.target.value}))
-    
-  }
-  const login = (e)=>{
+  const changeInfo = (e) => {
+    setLoginInfo((values) => ({ ...values, [e.target.name]: e.target.value }));
+  };
+  const login = (e) => {
     e.preventDefault();
-    axios.post(apis.login,loginInfo).then((res)=>{
-      
-      localStorage.setItem("token",res.data.accessToken)
-      alert("Logedin Successfully");
-      navigate("/home")
-      // console.log(res.data);
-    }).catch((err)=>{
-      alert("Bad Credantial")
-      console.log(err);
-    })
-  }
+    axios
+      .post(apis.login, loginInfo)
+      .then((res) => {
+        localStorage.setItem("token", res.data.accessToken);
+        alert("Logedin Successfully");
+        navigate("/home");
+      })
+      .catch((err) => {
+        alert("Bad Credantial");
+        console.log(err);
+      });
+  };
   return (
     <div>
       <DialogTitle id="alert-dialog-title">
@@ -101,14 +100,13 @@ function Login() {
               <OutlinedInput
                 id="outlined-adornment-password"
                 onChange={changeInfo}
-                      name="password"
-                      required
+                name="password"
+                required
                 type={showPassword ? "text" : "password"}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
@@ -124,8 +122,12 @@ function Login() {
                 label="Password"
               />
             </FormControl>
-            <Button   style={ButtonStyle} type="submit" variant="contained" onClick={login}>
-            {/* <Button component={Link} to={isAdmin ? "/home" : "/officerHome"} style={ButtonStyle} type="submit" variant="contained" onClick={}> */}
+            <Button
+              style={ButtonStyle}
+              type="submit"
+              variant="contained"
+              onClick={login}
+            >
               Login
             </Button>
           </form>
