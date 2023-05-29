@@ -42,6 +42,7 @@ function Home() {
     fontSize: 30,
     color: "#e6e6ff",
     WebkitTextStrokeColor: "black",
+    fontFamily: "Sitka Small Semibold, sans-serif",
   };
 
   const ButtonStyle = {
@@ -50,27 +51,27 @@ function Home() {
     marginTop: "5%",
     fontSize: 20,
   };
-
   return (
     <>
-      <Header />
-      <div style={HomeStyle}>
-        <div style={TextStyle1}>Your Vote is your Voice</div>
-        <div style={TextStyle2}>Make the right Decision</div>
-        <div style={{ display: "flex", justifyContent: "space-around"}}>
-          <div style={TextStyle3}>Election Date : 01/05/2023 - 03/05/2023</div>
+      <>
+        <Header />
+        <div style={HomeStyle}>
+          <div style={TextStyle1}>Your Vote is your Voice</div>
+          <div style={TextStyle2}>Make the right Decision</div>
           <div style={TextStyle3}>
-            Registration Date : 01/04/2023 - 03/04/2023
+            Every election is determined by the people who show up
           </div>
+          <Button
+            component={Link}
+            to="/result"
+            variant="contained"
+            style={ButtonStyle}
+          >
+            View Result
+          </Button>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-around" }}>
-          <div style={TextStyle3}>Election Time : 10:00 - 02:00</div>
-          <div style={TextStyle3}>Registration Time : 10:00 - 05:00</div>
-        </div>
-        <Button component= {Link} to="/result" variant="contained" style={ButtonStyle}>
-          View Result
-        </Button>
-      </div>
+      </>
+      // : "No Registration done yet"
     </>
   );
 }

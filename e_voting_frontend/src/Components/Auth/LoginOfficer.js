@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import {
   Avatar,
   Button,
@@ -8,19 +11,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apis } from "../../api/bootapi";
 
-function Login() {
+function LoginOfficer() {
   const ButtonStyle = {
     backgroundColor: "#000080",
     marginTop: 20,
@@ -52,7 +52,7 @@ function Login() {
       .then((res) => {
         localStorage.setItem("token", res.data.accessToken);
         alert("Logedin Successfully");
-        navigate("/home");
+        navigate("/officerHome");
       })
       .catch((err) => {
         alert("Bad Credantial");
@@ -69,14 +69,14 @@ function Login() {
           className="headerStyle"
           style={{
             margin: "auto",
-            width: "19%",
+            width: "80%",
             fontWeight: "bold",
             fontSize: 25,
           }}
         >
-          Login
+          Presiding Officer Login
         </h2>
-        <Typography style={{ margin: "auto", width: "80%" }}>
+        <Typography style={{ margin: "auto", width: "75%" }}>
           Please fill your information correctly!
         </Typography>
       </DialogTitle>
@@ -128,6 +128,7 @@ function Login() {
               variant="contained"
               onClick={login}
             >
+              {/* <Button component={Link} to={isAdmin ? "/home" : "/officerHome"} style={ButtonStyle} type="submit" variant="contained" onClick={}> */}
               Login
             </Button>
           </form>
@@ -137,4 +138,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginOfficer;

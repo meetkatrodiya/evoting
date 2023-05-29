@@ -31,8 +31,22 @@ import Loading from "../../../Loading/Loading";
 export default function VoterList() {
 
   const [check,setCheck] = React.useState(false);
-
+  const [regStart,setRegStart] = React.useState(Date());
+const [regEnd,setregEnd] = React.useState(Date());
+const [current,setCurrent] = React.useState(Date());
   React.useEffect(()=>{
+    const d = new Date()
+  setCurrent(d)
+    axios.get(apis.rs).then((res)=>{
+      const d = new Date(`${res.data}`);
+      console.log(d)
+      setRegStart(d);
+    }).catch((err)=>console.log(err))
+    axios.get(apis.re).then((res)=>{
+      const d = new Date(`${res.data}`);
+      console.log(d)
+      setregEnd(d);
+    }).catch((err)=>console.log(err))
     getVoters()
   },[check])
   const [open, setOpen] = React.useState(false);
@@ -98,6 +112,7 @@ export default function VoterList() {
   return (
     <>
     {loading?
+    current >= regStart ? 
     <Paper
       sx={{
         width: "100%",
@@ -179,6 +194,7 @@ export default function VoterList() {
                   <TableCell>{row.voterid}</TableCell>
                   <TableCell>{row.email}</TableCell>
                   <TableCell>
+                  {current <= regEnd &&
                     <Button
                       onClick={updatehandleClickOpen}
                       variant="contained"
@@ -186,9 +202,10 @@ export default function VoterList() {
                       color="success"
                     >
                       Update
-                    </Button>
+                    </Button>}
                   </TableCell>
                   <TableCell>
+                  {current <= regEnd &&
                     <Button
                       variant="contained"
                       startIcon={<DeleteIcon />}
@@ -197,6 +214,7 @@ export default function VoterList() {
                     >
                       Delete
                     </Button>
+            }
                   </TableCell>
                 </TableRow>
               );
@@ -219,6 +237,7 @@ export default function VoterList() {
         paddingRight={3}
         paddingTop={3}
       >
+         {current <= regEnd &&
         <Button
           onClick={handleClickOpen}
           variant="contained"
@@ -227,16 +246,18 @@ export default function VoterList() {
         >
           Add Voter
         </Button>
+}
         <Dialog
           open={open}
           onClose={handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <AddVoter />
+          <AddVoter close={handleClose} check={handlecheck}/>
         </Dialog>
       </Box>
     </Paper>
+    :"No Registration Start"
     :<Loading/>
           }
           </>

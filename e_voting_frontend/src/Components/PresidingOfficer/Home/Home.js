@@ -1,27 +1,25 @@
 import * as React from "react";
-import ShowCard from "./Card";
-import { Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { apis } from "../../../api/bootapi";
 
 export default function Home() {
-  return (
-    <div style={{padding: 30,
-      backgroundColor: "#f2f2f2", margin: "1.5%"}}>
-      <Typography
-        variant="h4"
-        style={{ textAlign: "center", fontWeight: "bold", marginBottom: 5 }}
-        textAlign
-      >
-        Election Details
-      </Typography>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-around",
-        }}
-      >
-        <ShowCard title={"For Election"} />
-        <ShowCard title={"For Registration"} />
-      </div>
-    </div>
-  );
+  const navigate = useNavigate();
+  const [visible, setVisible] = React.useState(false);
+  React.useEffect(() => {
+    axios
+      .get(apis.validateOfficer, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        console.log("here");
+        setVisible(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/");
+      });
+  }, []);
+
+  return <>{visible && <h1>Hello</h1>}</>;
 }
